@@ -13,6 +13,7 @@ servers:
         default: localhost
 
 tags:
+  - name: Auth
   - name: Context
   - name: Licensing
   - name: Apps
@@ -20,6 +21,79 @@ tags:
   - name: Audit
 
 paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Authenticate a user and issue access + refresh tokens.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "200":
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [access_token, refresh_token, expires_at]
+                properties:
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+                  expires_at:
+                    type: string
+                    format: date-time
+                  refresh_expires_at:
+                    type: string
+                    format: date-time
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Issue a new access token from a refresh token.
+      operationId: refreshUserSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        "200":
+          description: Access token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [access_token, expires_at]
+                properties:
+                  access_token:
+                    type: string
+                  expires_at:
+                    type: string
+                    format: date-time
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
   /context:
     get:
       tags: [Context]
