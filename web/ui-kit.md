@@ -1,13 +1,13 @@
-# UI kit / Design systém
+# UI kit / Design system
 
-UI kit slouží jako sdílená knihovna komponent pro Core Console i další aplikace. Cílem je konzistence, rychlá iterace a jednoduché přenesení brandingu.
+The UI kit is a shared component library for the Core Console and other applications. The goal is consistency, fast iteration, and easy branding transfer.
 
-## Design principy
+## Design principles
 
-- **Konzistence**: jednotné spacing, barvy, typografie
-- **Kompozice**: malé prvky skládáme do větších
-- **Přístupnost**: klávesové ovládání, kontrast, aria atributy
-- **Tematizace**: theme tokens (light/dark + tenant branding)
+- **Consistency**: unified spacing, colors, typography
+- **Composition**: small parts build into larger units
+- **Accessibility**: keyboard navigation, contrast, aria attributes
+- **Theming**: theme tokens (light/dark + tenant branding)
 
 ## Tokens
 
@@ -16,21 +16,21 @@ UI kit slouží jako sdílená knihovna komponent pro Core Console i další apl
 - `radius.sm/md/lg`
 - `shadow.sm/md/lg`
 
-## Základní komponenty (atomy)
+## Base components (atoms)
 
 ### Button
 
-- varianty: `primary`, `secondary`, `danger`, `ghost`
-- stavy: `default`, `hover`, `disabled`, `loading`
+- variants: `primary`, `secondary`, `danger`, `ghost`
+- states: `default`, `hover`, `disabled`, `loading`
 
 ### Input
 
 - text, password, email
-- validace, error stav
+- validation, error state
 
 ### Select
 
-- single i multi select
+- single and multi select
 
 ### Badge
 
@@ -38,9 +38,9 @@ UI kit slouží jako sdílená knihovna komponent pro Core Console i další apl
 
 ### Avatar
 
-- uživatel, inicála fallback
+- user avatar with initials fallback
 
-## Kompozitní komponenty (molekuly)
+## Composite components (molecules)
 
 ### FormField
 
@@ -62,19 +62,19 @@ UI kit slouží jako sdílená knihovna komponent pro Core Console i další apl
 
 - toast / inline alert
 
-## Layout komponenty
+## Layout components
 
-- `PageLayout` – hlavní layout stránky
-- `SidebarNav` – navigace
-- `TopBar` – kontext, profil, tenant
-- `SectionHeader` – nadpis + akce
+- `PageLayout` – main page layout
+- `SidebarNav` – navigation
+- `TopBar` – context, profile, tenant
+- `SectionHeader` – title + actions
 
-## Ikony a stavy
+## Icons and states
 
-- konzistentní sada ikon (např. lucide/react)
-- jednotné empty states a loading skeletons
+- consistent icon set (e.g., lucide/react)
+- unified empty states and loading skeletons
 
-## Doporučená struktura
+## Suggested structure
 
 ```
 src/ui-kit/

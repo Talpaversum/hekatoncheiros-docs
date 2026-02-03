@@ -1,27 +1,27 @@
-# Ovládací rozhraní Core/Kernel
+# Core/Kernel console
 
-Tento dokument definuje základní UI pro správu **Core/Kernel**. Je cíleně navržen tak, aby byl použitelný jako referenční konzole pro další aplikace.
+This document defines the baseline UI for managing **Core/Kernel**. It is intentionally designed to serve as a reference console for other applications.
 
-## Hlavní koncepty UI
+## Key UI concepts
 
-- **Context banner**: zobrazuje tenant, aktuálního uživatele, impersonation/delegation
-- **Core navigation**: stabilní menu pro klíčové moduly
-- **Privilege gating**: menu i akce závisí na `privileges`
-- **Audit visibility**: povinná audit stopa pro citlivé akce
+- **Context banner**: shows tenant, current user, impersonation/delegation
+- **Core navigation**: stable menu for key modules
+- **Privilege gating**: menu and actions depend on `privileges`
+- **Audit visibility**: mandatory audit trail for sensitive actions
 
-## Primární sekce
+## Primary sections
 
 ### 1) Dashboard
 
-- přehled tenant stavu
-- info o licencích
-- poslední audit eventy
+- tenant status overview
+- license summary
+- recent audit events
 
 ### 2) Tenants
 
-- seznam tenantů (pro superadmin)
-- detail tenanta
-- možnost vytvořit tenant (install-time / platform admin)
+- tenant list (for superadmin)
+- tenant detail
+- create tenant option (install-time / platform admin)
 
 **API**
 
@@ -31,8 +31,8 @@ Tento dokument definuje základní UI pro správu **Core/Kernel**. Je cíleně n
 
 ### 3) Users
 
-- seznam uživatelů
-- detail uživatele
+- user list
+- user detail
 - impersonation start/stop
 
 **API**
@@ -44,9 +44,9 @@ Tento dokument definuje základní UI pro správu **Core/Kernel**. Je cíleně n
 
 ### 4) Access
 
-- privileges viewer
-- delegation seznam
-- vytvoření delegace
+- privilege viewer
+- delegation list
+- create delegation
 
 **API**
 
@@ -56,7 +56,7 @@ Tento dokument definuje základní UI pro správu **Core/Kernel**. Je cíleně n
 
 ### 5) Apps
 
-- registry aplikací
+- app registry
 - enable/disable app per tenant
 
 **API**
@@ -67,8 +67,8 @@ Tento dokument definuje základní UI pro správu **Core/Kernel**. Je cíleně n
 
 ### 6) Licensing
 
-- přehled licencí
-- aktivace offline licencí
+- license overview
+- offline license activation
 
 **API**
 
@@ -78,13 +78,13 @@ Tento dokument definuje základní UI pro správu **Core/Kernel**. Je cíleně n
 ### 7) Audit
 
 - audit feed
-- filtr podle user/tenant/action
+- filter by user/tenant/action
 
 **API**
 
 - `POST /api/v1/audit/record`
 
-## Základní UI layout
+## Base UI layout
 
 ```
 ┌───────────────────────────────────────────────────┐
@@ -101,17 +101,17 @@ Tento dokument definuje základní UI pro správu **Core/Kernel**. Je cíleně n
 └───────────────┴───────────────────────────────────┘
 ```
 
-## Používané UI komponenty
+## UI components used
 
 - `PageLayout`, `SidebarNav`, `TopBar`
 - `SectionHeader`
 - `Table`, `Card`, `FormField`, `Button`
-- `Modal` pro potvrzení citlivých akcí
-- `Notification` pro feedback
+- `Modal` for confirming sensitive actions
+- `Notification` for feedback
 
-## Povinné UX pravidla
+## Mandatory UX rules
 
-- Impersonation je vždy vizuálně zvýrazněna
-- Citlivé akce vyžadují potvrzení
-- Prázdné stavy mají guidance text
-- Všechny akce logují audit event (server-side)
+- Impersonation is always visually highlighted
+- Sensitive actions require confirmation
+- Empty states must include guidance text
+- All actions log audit events (server-side)

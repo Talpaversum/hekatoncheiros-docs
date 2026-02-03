@@ -1,21 +1,21 @@
-# Architektura frontendu
+# Frontend architecture
 
-## Cíl
+## Goal
 
-Frontend (TypeScript/React) poskytuje jednotné UI pro správu **Hekatoncheiros Core** a zároveň slouží jako **design systém** pro další aplikace. Architektura je navržena tak, aby:
+The frontend (TypeScript/React) provides a unified UI for managing **Hekatoncheiros Core** and also serves as a **design system** for other applications. The architecture is designed to:
 
-- oddělila **core konzoli** od **sdílených UI komponent**
-- byla snadno rozšiřitelná o další aplikace
-- respektovala core API surface `/api/v1/...`
+- separate the **core console** from **shared UI components**
+- be easy to extend with additional applications
+- respect the core API surface `/api/v1/...`
 
-## Vysoká úroveň
+## High-level overview
 
-- **App Shell**: layout, routing, navigace, theming
-- **Core Console**: stránky pro kernel (tenants, users, access, apps, licensing)
-- **UI Kit**: sdílené komponenty (buttony, formuláře, tabulky)
-- **Data Layer**: klient pro API, caching, auth
+- **App Shell**: layout, routing, navigation, theming
+- **Core Console**: kernel pages (tenants, users, access, apps, licensing)
+- **UI Kit**: shared components (buttons, forms, tables)
+- **Data Layer**: API client, caching, auth
 
-## Doporučené moduly
+## Suggested modules
 
 ```
 src/
@@ -39,15 +39,15 @@ src/
 
 ## Data flow
 
-1. **Auth** přes `/api/v1/auth/login`
-2. Po loginu načíst `/api/v1/context` pro tenant, actor, privileges, licenses
-3. UI používá kontext pro:
-   - zobrazení menu (podle oprávnění)
-   - zobrazení licencí
-   - gating funkcí
-4. Změny v core (např. impersonation) aktualizují kontext
+1. **Auth** via `/api/v1/auth/login`
+2. After login, fetch `/api/v1/context` for tenant, actor, privileges, licenses
+3. UI uses the context for:
+   - menu visibility (based on privileges)
+   - license visibility
+   - feature gating
+4. Core changes (e.g., impersonation) refresh the context
 
-## Konvence komponent
+## Component conventions
 
 - **Atomic UI** (Button, Input, Badge)
 - **Composable** (FormField, Card, Table)
@@ -62,11 +62,11 @@ src/
 - `/core/licensing`
 - `/core/audit`
 
-## Integrace backendu
+## Backend integration
 
 - API base: `http://127.0.0.1:3000/api/v1`
-- Přenos JWT tokenu v `Authorization: Bearer <token>`
+- JWT token transmission: `Authorization: Bearer <token>`
 
-## Připraveno pro sdílení
+## Ready for sharing
 
-UI kit je navržený tak, aby šel publikovat jako samostatný balík (např. `@hc/ui-kit`) a používat v dalších aplikacích.
+The UI kit is designed to be published as a standalone package (e.g., `@hc/ui-kit`) and reused across applications.
