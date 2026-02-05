@@ -27,6 +27,34 @@ This created tight coupling between core and apps, violated separation of concer
 - Runtime install and uninstall without code changes
 - No filesystem or repository coupling
 
+## Temporary Dev Installer API (MVP)
+
+During early development, a thin dev-only installer UI is allowed to call core APIs
+that write to the in-memory `AppInstallationStore`. This is **not** the final installer
+workflow and will be replaced by the marketplace / wizard.
+
+### Endpoints (v1)
+
+- `GET /api/v1/apps/installed`
+- `POST /api/v1/apps/installed`
+- `DELETE /api/v1/apps/installed/:app_id`
+
+### Install payload (MVP)
+
+```json
+{
+  "app_id": "app_inventory",
+  "base_url": "http://127.0.0.1:4010",
+  "ui_url": "http://127.0.0.1:4011/plugin.js",
+  "manifest": { "...": "..." },
+  "required_privileges": ["inventory.read"]
+}
+```
+
+### Privilege
+
+- `platform.apps.manage`
+
 ## Rejected Alternatives
 
 - Static app registry files committed to a repository

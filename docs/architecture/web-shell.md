@@ -76,11 +76,20 @@ Baseline UI for managing **Core/Kernel**. It serves as a reference console for o
 - app registry
 - enable/disable app per tenant
 
+**Installed apps (temporary dev installer)**
+
+- thin admin UI for install/uninstall (no wizard)
+- in-memory `AppInstallationStore`
+- requires privilege `platform.apps.manage`
+
 **API**
 
 - `POST /api/v1/apps/register`
 - `POST /api/v1/tenants/apps/{app_id}/enable`
 - `POST /api/v1/tenants/apps/{app_id}/disable`
+- `GET /api/v1/apps/installed`
+- `POST /api/v1/apps/installed`
+- `DELETE /api/v1/apps/installed/{app_id}`
 
 #### 6) Licensing
 
@@ -103,19 +112,23 @@ Baseline UI for managing **Core/Kernel**. It serves as a reference console for o
 
 ### Base UI layout
 
+The shell layout is stable, but **navigation content is context-driven**.
+
+- **SidebarNav** changes based on the current route:
+  - `/core/*` and `/admin/*` use static section configs (Dashboard, Apps, Licensing, Admin, ...)
+  - `/app/:appId/*` uses **app registry** `nav_entries` for the active app
+- **TopBar** provides global navigation + dropdowns:
+  - left: Dashboard, Apps dropdown (registry + app entries), Licensing
+  - right: messaging icon, Settings dropdown (theme toggle), User dropdown (logout)
+
 ```
-┌───────────────────────────────────────────────────┐
-│ TopBar: tenant | user | impersonation | actions   │
-├───────────────┬───────────────────────────────────┤
-│ SidebarNav    │ Page content                       │
-│ - Dashboard   │ - SectionHeader                    │
-│ - Tenants     │ - DataTable / Forms / Widgets      │
-│ - Users       │                                     │
-│ - Access      │                                     │
-│ - Apps        │                                     │
-│ - Licensing   │                                     │
-│ - Audit       │                                     │
-└───────────────┴───────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ TopBar: Dashboard | Apps ▾ | Licensing | Settings ▾ | User ▾ │
+├──────────────────┬───────────────────────────────────────────┤
+│ SidebarNav (ctx) │ Page content                              │
+│ - core/admin OR  │ - SectionHeader                           │
+│ - app nav        │ - DataTable / Forms / Widgets             │
+└──────────────────┴───────────────────────────────────────────┘
 ```
 
 ### UI components used
