@@ -1,91 +1,115 @@
 # UI kit / Design system
 
-The UI kit is a shared component library for the Core Console and other applications. The goal is consistency, fast iteration, and easy branding transfer.
+UI kit je sdílená knihovna komponent pro Core Console. Cíl je konzistence, rychlá iterace a možnost přenést branding. Aktuální implementace odpovídá **Material‑inspired** stylu s **light/dark** schématem.
 
 ## Design principles
 
-- **Consistency**: unified spacing, colors, typography
-- **Composition**: small parts build into larger units
-- **Accessibility**: keyboard navigation, contrast, aria attributes
-- **Theming**: theme tokens (light/dark + tenant branding)
+- **Consistency**: sjednocené spacingy, typografie a stavy
+- **Composition**: malé prvky skládají větší celky
+- **Accessibility**: aria atributy, kontrast, focus ringy
+- **Theming**: light/dark přes CSS tokeny + Tailwind v4 `@theme`
 
-## Tokens
+## Tokens (CSS custom properties)
 
-- `color.primary`, `color.secondary`, `color.danger`
-- `space.xs/sm/md/lg/xl`
-- `radius.sm/md/lg`
-- `shadow.sm/md/lg`
+Hlavní tokeny jsou v `hekatoncheiros-web/src/index.css` a mapují se do Tailwind utilit přes `@theme`:
+
+- **Surface vrstvy**
+  - `--hc-bg` – pozadí aplikace
+  - `--hc-surface` – hlavní content (karty, menu)
+  - `--hc-surface-variant` – zvýraznění (hover/active)
+  - `--hc-rail` – sidebar rail (tmavší)
+  - `--hc-topbar` – topbar (nejtmavší)
+- **Text**: `--hc-text`, `--hc-muted`
+- **Akcent**: `--hc-primary`, `--hc-on-primary`
+- **Danger**: `--hc-danger`, `--hc-on-danger`
+- **Topbar gradient**: `--hc-topbar-glow`, `--hc-topbar-depth`
+
+Tailwind utilitám odpovídají například:
+
+- `bg-hc-rail`, `bg-hc-topbar`, `bg-hc-surface`
+- `text-hc-muted`, `text-hc-text`
+- `from-hc-topbar-glow`, `to-hc-topbar-depth`
 
 ## Base components (atoms)
 
-### Button
+### Button (`ui-kit/components/Button.tsx`)
 
-- variants: `primary`, `secondary`, `danger`, `ghost`
-- states: `default`, `hover`, `disabled`, `loading`
+- variants: `filled`, `tonal`, `outlined`, `ghost`, `danger`
+- states: hover/focus/disabled
 
-### Input
+### Input (`ui-kit/components/Input.tsx`)
 
-- text, password, email
-- validation, error state
+- text, password
+- error state
 
-### Select
+### IconButton (`ui-kit/components/IconButton.tsx`)
 
-- single and multi select
+- variants: `default`, `tonal`, `ghost`
 
-### Badge
+### Switch (`ui-kit/components/Switch.tsx`)
 
-- status (active/disabled/pending)
+- použito v nastavení (dark mode toggle)
 
-### Avatar
+### Avatar (`ui-kit/components/Avatar.tsx`)
 
-- user avatar with initials fallback
+- fallback na iniciály
 
 ## Composite components (molecules)
 
-### FormField
+### Card (`ui-kit/components/Card.tsx`)
 
-- label + input + error
+- surface container + shadow
 
-### Card
+### Table (`ui-kit/components/Table.tsx`)
 
-- header + body + footer
+- jednoduchá tabulka s povrchem
 
-### Table
+### Menu (`ui-kit/components/Menu.tsx`)
 
-- sortable header, row actions, empty state
-
-### Modal
-
-- confirm / destructive modals
-
-### Notification
-
-- toast / inline alert
+- dropdown pro Apps/Settings/Profile
+- zavírání na klik mimo / ESC
 
 ## Layout components
 
-- `PageLayout` – main page layout
-- `SidebarNav` – navigation
-- `TopBar` – context, profile, tenant
-- `SectionHeader` – title + actions
+- `AppTopBar` – sticky topbar s globální navigací, settings dropdownem a profile dropdownem
+- `SidebarNav` – kontextový sidebar podle route
+- `PageLayout` – základní page wrapper
+- `TopBar` – page header (sekundární)
 
-## Icons and states
+### AppTopBar (layout)
 
-- consistent icon set (e.g., lucide/react)
-- unified empty states and loading skeletons
+- **Left:** Dashboard, Apps (dropdown), Licensing
+- **Right:** messaging icon, settings dropdown (theme toggle), user dropdown (Odhlásit)
 
-## Suggested structure
+### SidebarNav (layout)
+
+- mění obsah dle `/core/dashboard`, `/core/apps`, `/core/licensing`
+
+## Theming (light/dark)
+
+- switch je v dropdownu nastavení (ozubené kolo)
+- stav se ukládá do `localStorage` (klíč `hc_theme`)
+- `useTheme` aplikuje `document.documentElement.dataset.theme`
+
+## Doporučená struktura složek
 
 ```
 src/ui-kit/
   components/
-    Button/
-    Input/
-    FormField/
-    Table/
-  tokens/
-    colors.ts
-    spacing.ts
-  styles/
-    global.css
+    Avatar.tsx
+    Button.tsx
+    Card.tsx
+    IconButton.tsx
+    Input.tsx
+    Menu.tsx
+    Switch.tsx
+    Table.tsx
+  layout/
+    AppTopBar.tsx
+    SidebarNav.tsx
+    PageLayout.tsx
+    TopBar.tsx
+  theme/
+    theme-storage.ts
+    useTheme.ts
 ```
