@@ -145,6 +145,9 @@ The Core maintains:
 - manifest data
 - enabled/disabled state per tenant
 
+`app_id` is the global identity of an application.
+All provisioning (schemas, routing, registry entries) is keyed by `app_id`.
+
 #### UI execution model
 
 Applications contribute user interface elements declaratively via their manifests.

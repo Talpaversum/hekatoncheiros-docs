@@ -37,9 +37,17 @@ The Platform Kernel guarantees that:
 Each app must declare:
 
 - `app_id`
-  - globally unique
-  - immutable
-  - reverse-domain or org-prefixed recommended
+  - MUST be globally unique across all vendors and marketplaces
+  - MUST be immutable for the lifetime of the application
+  - MUST be stable across releases
+  - SHOULD use reverse-domain notation
+  - MUST NOT be assigned by the core
+  - random UUIDs are discouraged
+  - hash-only identifiers are discouraged
+  - examples:
+    - `com.talpaversum.inventory`
+    - `io.acme.warehouse`
+    - `cz.example.asset_registry`
 - `app_name`
   - human-readable
   - not required to be unique
@@ -97,6 +105,26 @@ This declaration allows:
 - permission enforcement
 - migration isolation
 - AGPL boundary clarity
+
+### Schema derivation from app_id
+
+Application database schema is derived from `app_id`.
+
+- Schema format: `app_${sanitized(app_id)}`
+- Sanitization rules:
+  - lowercase
+  - allowed characters: `a–z`, `0–9`, `_`
+  - all other characters are replaced with `_`
+
+### PostgreSQL identifier length limit
+
+- PostgreSQL identifiers are limited to 63 characters
+- If the derived schema name exceeds this limit:
+  - it is truncated
+  - a short, stable hash suffix is appended
+  - the hash is used only to preserve uniqueness
+- the hash is not the application identity
+- the hash is not part of the manifest
 
 ## Permissions and Privileges
 
