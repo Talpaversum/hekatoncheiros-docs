@@ -20,6 +20,7 @@ This index separates architecture, ADR decisions, guides, and reference material
 
 ### App developer
 
+- [Quick Start](./guides/app-developer/quickstart.md)
 - [Manifest](./guides/app-developer/manifest.md)
 - [UI integration](./guides/app-developer/ui-integration.md)
 

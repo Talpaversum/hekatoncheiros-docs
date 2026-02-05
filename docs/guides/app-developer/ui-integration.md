@@ -17,6 +17,18 @@ to use shared components and the Core Console visual language.
 - **Accessibility**: ARIA attributes, contrast, focus rings
 - **Theming**: light/dark via CSS tokens + Tailwind v4 `@theme`
 
+## UI Plugin Contract
+
+An application UI module must export:
+
+- a registration function (e.g. register or createPlugin)
+- React components used as pages or widgets
+
+The registration function returns:
+- route definitions
+- navigation entries
+- optional widgets
+
 ## Tokens (CSS custom properties)
 
 Primary tokens live in `hekatoncheiros-web/src/index.css` and map to Tailwind utilities via `@theme`:

@@ -145,6 +145,24 @@ The Core maintains:
 - manifest data
 - enabled/disabled state per tenant
 
+#### UI execution model
+
+Applications contribute user interface elements declaratively via their manifests.
+
+The Core is the sole owner of UI execution, including:
+- routing
+- rendering
+- authentication
+- privilege-based visibility
+
+Applications do not run standalone web frontends.
+
+UI contributions are rendered inside the platform web shell according to the
+**Plugin Execution Model**.
+
+See: `app-execution-model.md`
+
+
 ### App lifecycle
 
 - upload / register app
