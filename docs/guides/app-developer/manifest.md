@@ -3,7 +3,7 @@
 
 ## Purpose
 
-The App Manifest is the single, authoritative declaration of how an application integrates with the Hekatoncheiros Platform Kernel.
+The App Manifest is the single, authoritative declaration of how an application integrates with the Hekatoncheiros Platform Kernel. The manifest declares UI contribution, not UI execution.
 
 It exists to:
 
@@ -241,9 +241,11 @@ Apps may declare:
 
 Rules:
 
-- UI is hosted inside the platform shell
-- no app may override core UI
-- visibility is privilege-based
+- UI is hosted and rendered inside the platform shell
+- apps do not own routing, rendering, or authentication
+- apps provide UI components, not standalone web applications
+- no user-facing UI may be served directly by the app
+- visibility is privilege-based and enforced by the core
 
 ## Prohibited Behavior (Hard Enforcement)
 
