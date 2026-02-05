@@ -1,12 +1,18 @@
-# Core module breakdown
+# Core modules and boundaries
 
-A practical internal split that keeps boundaries enforceable.
+A concise overview of internal Core modules, their responsibilities, and dependency rules.
+For the overall architectural context, see [overview](./overview.md).
 
-## core.platform (kernel “spine”)
+## Dependency principle
 
-- Config: loads config, validates, exposes read-only runtime config
+Modules may depend only “downward” in the hierarchy. Example: `core.apps` can call
+`core.tenancy` and `core.access`, but `core.access` must not import `core.apps`.
+
+## core.platform (kernel „spine“)
+
+- Config: configuration loading, validation, read-only runtime config
 - Context: `RequestContext`, `TenantContext`, `ActorContext`
-- Policy pipeline: middleware chain ordering is defined here (non-bypassable)
+- Policy pipeline: middleware ordering (non-bypassable)
 
 ## core.identity
 
@@ -21,7 +27,7 @@ A practical internal split that keeps boundaries enforceable.
 - Tenant settings
 - Departments (tenant-scoped)
 - Tenant resolver (domain/header/claim)
-- DB routing strategy implementation (single-tenant, db-per-tenant, row-level)
+- DB routing strategy (single-tenant, db-per-tenant, row-level)
 
 ## core.access
 
@@ -87,8 +93,4 @@ A practical internal split that keeps boundaries enforceable.
 - API server
 - Routing, middleware, auth
 - Health checks, readiness
-- Static UI shell serving (if core hosts UI)
-
-## Boundary enforcement rule
-
-Modules can depend “downward” only. Example: `core.apps` can call `core.tenancy` and `core.access`, but `core.access` must not import `core.apps`.
+- Static UI shell serving (if the core hosts UI)
