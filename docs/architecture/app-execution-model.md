@@ -49,6 +49,12 @@ The UI plugin distribution model is normative.
 - Core MAY enforce CSP restrictions to core-owned origins for plugin loading.
 - Plugin installation MUST be an admin-only operation.
 
+App-hosted artifact source endpoints MUST NOT be publicly downloadable.
+Artifact fetch from app backends is an installer-only channel under Installer
+Identity (`core -> app backend`), and the web shell MUST NOT use this channel.
+Normative installer-channel security contract is defined in
+`../adr/ADR-00X-app-installation-registry.md`.
+
 ## Not Supported
 
 The following models are NOT supported:
