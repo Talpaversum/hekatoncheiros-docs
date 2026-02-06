@@ -79,6 +79,36 @@ At runtime:
 - routes and navigation are owned by the core
 - privileges are enforced centrally
 
+## Build and distribution model (normative)
+
+UI code MUST be delivered as a **UI plugin artifact** (typically a JavaScript
+ESM bundle such as `plugin.js`).
+
+### Development mode
+
+- Development mode is a developer convenience workflow.
+- Development mode MUST NOT be treated as the reference production model.
+- Developers MAY build the UI plugin artifact manually, for example:
+  - `npm run build:plugin`
+- Installer-based installation MAY be executed only after the artifact has been
+  built.
+
+### Production / Marketplace mode
+
+- Production distribution MUST use prebuilt UI plugin artifacts.
+- Build-on-install MUST NOT be used.
+- Core MUST:
+  - download the artifact from a declared source
+  - verify artifact integrity (at least checksum)
+  - store the artifact in core-controlled storage
+  - expose the artifact through a stable core-owned URL
+
+### Runtime loading
+
+- The web shell MUST NOT install, build, or store UI plugin artifacts.
+- The web shell MUST load plugin code dynamically from `ui_url` provided by
+  core at runtime.
+
 ## Next steps
 
 - App Manifest Specification

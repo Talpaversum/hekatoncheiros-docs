@@ -165,6 +165,12 @@ UI contributions are rendered inside the platform web shell according to the
 
 See: `app-execution-model.md`
 
+UI plugin distribution follows the **UI Plugin Distribution Model**.
+Core MUST own installation, storage, and runtime exposure of UI plugin
+artifacts. The web shell MUST NOT install or store plugin artifacts.
+
+See: `app-execution-model.md#ui-plugin-distribution-model`
+
 
 ### App lifecycle
 

@@ -82,6 +82,11 @@ Baseline UI for managing **Core/Kernel**. It serves as a reference console for o
 - in-memory `AppInstallationStore`
 - requires privilege `platform.apps.manage`
 
+The web shell is not a plugin installer and not a plugin artifact repository.
+The web shell MUST NOT build, install, or store UI plugin artifacts.
+UI plugin artifacts are installed and hosted by core, and the web shell MUST
+load them dynamically from core-provided `ui_url` values.
+
 **API**
 
 - `POST /api/v1/apps/register`
