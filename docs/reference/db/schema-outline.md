@@ -43,6 +43,11 @@ This is the “v0” schema set that supports your contract. Names are illustrat
 - `app_versions`: app_id, version, manifest_json, compatibility metadata
 - `tenant_apps`: tenant_id, app_id, enabled, version_pinned, config
 - `app_routes`: app_id, route prefix, versioning info (for gateway)
+- `installed_apps`: global runtime installation state (app_id, slug, app_name, manifest_json, ui_url, nav_entries, enabled, installed_at, updated_at)
+
+## Schema migrations
+
+- `schema_migrations`: append-only migration tracking (`filename`, `applied_at`)
 
 ## Events
 
