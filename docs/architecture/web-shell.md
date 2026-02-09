@@ -183,6 +183,13 @@ src/
    - feature gating
 4. Core changes (e.g., impersonation) refresh the context
 
+Privilege semantics used by the shell:
+
+- `/context.privileges` is effective for the current tenant:
+  - platform-scope grants (`tenant_id = NULL`)
+  - plus current-tenant grants (`tenant_id = current tenant`)
+- `platform.superadmin` is a wildcard for `platform.*` checks only.
+
 ## Component conventions
 
 - **Atomic UI** (Button, Input, Badge)

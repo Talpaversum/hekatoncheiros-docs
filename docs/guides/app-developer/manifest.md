@@ -146,6 +146,52 @@ Apps may never:
 - bypass privilege evaluation
 - escalate privileges
 
+### Privilege namespaces
+
+Reserved namespaces (core/platform only):
+
+- `core.*`
+- `platform.*`
+- `tenant.*`
+
+Applications MUST NOT declare these namespaces in manifest `required_privileges`.
+
+Canonical app-scoped privilege format:
+
+- `app:<app_id>:<priv>`
+
+Examples:
+
+- `app:vendor.crm:contacts.read`
+- `app:vendor.crm:contacts.write`
+
+### Privilege scopes (grant scope)
+
+Privilege identifiers remain strings, but grants are scoped by `tenant_id`:
+
+- platform-scope grant: `tenant_id = NULL`
+- tenant-scope grant: `tenant_id = <tenant-id>`
+
+`/context` returns effective privileges for the current tenant context:
+
+- all platform-scope grants
+- plus tenant-scope grants for the current tenant
+
+Examples:
+
+- `platform.superadmin` is platform-scope (`tenant_id = NULL`)
+- `tenant.config.manage` can be granted only for tenant `A` and absent for tenant `B`
+
+### Superadmin wildcard
+
+`platform.superadmin` acts as wildcard for any `platform.*` privilege checks.
+
+It is NOT a wildcard for:
+
+- `core.*`
+- `tenant.*`
+- app-scoped privileges (e.g. `app:<app_id>:...`)
+
 ## Impersonation and Delegation
 
 ### Impersonation
@@ -320,6 +366,30 @@ Core may refuse to load an app with:
 - missing declarations
 - privilege violations
 - unsafe collaboration scopes
+
+### Manifest validation: reserved required_privileges
+
+Any manifest `required_privileges` entry that starts with a reserved prefix is rejected.
+
+Rejected examples:
+
+- `platform.apps.manage`
+- `core.something`
+- `tenant.config.manage`
+
+Allowed examples:
+
+- `app:vendor.crm:contacts.read`
+- `hc-app-inventory.items.read`
+
+Error message:
+
+`Invalid required_privilege "<X>": reserved namespaces core./platform./tenant. are not allowed in app manifests.`
+
+Seed baseline used by core (default admin):
+
+- `platform.superadmin` (platform-scope)
+- required `core.*` privileges (platform-scope)
 
 ## Status
 
