@@ -6,6 +6,7 @@ This index separates architecture, ADR decisions, guides, and reference material
 
 - [ADR-00X: Application Installation Registry](./adr/ADR-00X-app-installation-registry.md)
 - [ADR-00Y: Core-triggered App-Managed Migrations](./adr/ADR-00Y-core-triggered-app-managed-migrations.md)
+- [ADR-00Z: Entitlements & Licensing Model](./adr/ADR-00Z-entitlements-licensing-model.md)
 
 ## Architecture
 

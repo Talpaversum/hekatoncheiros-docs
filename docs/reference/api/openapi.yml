@@ -115,54 +115,180 @@ paths:
   /licensing/apps/{app_id}:
     get:
       tags: [Licensing]
-      summary: Get licensing state and entitlements for a specific app for current tenant.
-      operationId: getAppLicense
+      summary: Deprecated in favor of /licensing/entitlements and /apps/{slug}/entitlement.
+      operationId: deprecatedGetAppLicense
+      deprecated: true
+      responses:
+        "410":
+          description: Endpoint removed in entitlements model.
+
+  /licensing/apps/{app_id}/activate-offline:
+    post:
+      tags: [Licensing]
+      summary: Deprecated in favor of /licensing/offline.
+      operationId: deprecatedActivateOfflineLicense
+      deprecated: true
+      responses:
+        "410":
+          description: Endpoint removed in entitlements model.
+
+  /licensing/entitlements:
+    get:
+      tags: [Licensing]
+      summary: List tenant entitlements for one app, including selected entitlement id.
+      operationId: listEntitlements
       parameters:
-        - $ref: "#/components/parameters/AppId"
+        - name: app_id
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearerAuthUser: []
       x-required-privileges:
         - "core.licensing.read"
       responses:
         "200":
-          description: License state
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AppLicense"
+          description: Entitlements list
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
 
-  /licensing/apps/{app_id}/activate-offline:
+  /licensing/selection:
     post:
       tags: [Licensing]
-      summary: Activate offline license for an app (tenant admin only).
-      operationId: activateOfflineLicense
-      parameters:
-        - $ref: "#/components/parameters/AppId"
+      summary: Set explicit selected entitlement for tenant/app.
+      operationId: setEntitlementSelection
       security:
         - bearerAuthUser: []
       x-required-privileges:
-        - "core.licensing.activate_offline"
+        - "core.licensing.manage_selection"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OfflineLicenseActivationRequest"
+              type: object
+              required: [app_id, entitlement_id]
+              properties:
+                app_id:
+                  type: string
+                entitlement_id:
+                  type: string
+                  format: uuid
       responses:
-        "200":
-          description: License activated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AppLicense"
+        "204":
+          description: Selection set
         "400":
           $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /licensing/selection/clear:
+    post:
+      tags: [Licensing]
+      summary: Clear explicit selection for tenant/app.
+      operationId: clearEntitlementSelection
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "core.licensing.manage_selection"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [app_id]
+              properties:
+                app_id:
+                  type: string
+      responses:
+        "204":
+          description: Selection cleared
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /licensing/offline:
+    post:
+      tags: [Licensing]
+      summary: Ingest and verify offline entitlement token (JWS/JWT).
+      operationId: ingestOfflineEntitlement
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "core.licensing.ingest_offline"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+      responses:
+        "200":
+          description: Token ingested
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /apps/registry:
+    get:
+      tags: [Apps]
+      summary: List visible apps (installed + resolved entitlement + privileges).
+      operationId: listVisibleAppRegistry
+      security:
+        - bearerAuthUser: []
+      responses:
+        "200":
+          description: Registry items
+
+  /apps/installed:
+    get:
+      tags: [Apps]
+      summary: List installed apps with resolved entitlement and has_any_entitlement flag.
+      operationId: listInstalledAppsWithEntitlements
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      responses:
+        "200":
+          description: Installed app list
+
+  /apps/{slug}/entitlement:
+    get:
+      tags: [Apps]
+      summary: Return resolved entitlement for app runtime.
+      operationId: getResolvedAppEntitlement
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuthUser: []
+      responses:
+        "200":
+          description: Resolved entitlement
+        "204":
+          description: No entitlement resolved
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
