@@ -6,13 +6,28 @@ This index separates architecture, ADR decisions, guides, and reference material
 
 - [ADR-00X: Application Installation Registry](./adr/ADR-00X-app-installation-registry.md)
 - [ADR-00Y: Core-triggered App-Managed Migrations](./adr/ADR-00Y-core-triggered-app-managed-migrations.md)
-- [ADR-00Z: Entitlements & Licensing Model](./adr/ADR-00Z-entitlements-licensing-model.md)
 
 ## Architecture
 
 - [Overview](./architecture/overview.md)
 - [Core modules](./architecture/core.md)
 - [Web shell](./architecture/web-shell.md)
+
+## Licensing
+
+- [Licensing overview](./licensing/overview.md)
+- [Trust model](./licensing/trust-model.md)
+- [Identity model](./licensing/identity-model.md)
+- [Token structures](./licensing/token-structures.md)
+- [OAuth flow](./licensing/oauth-flow.md)
+- [Offline flow](./licensing/offline-flow.md)
+- [Core integration](./licensing/core-integration.md)
+- [API: author registry](./licensing/api-author-registry.md)
+- [API: licensing server](./licensing/api-licensing-server.md)
+- [API: core](./licensing/api-core.md)
+- [ERD: author registry](./licensing/erd-author-registry.md)
+- [ERD: licensing server](./licensing/erd-licensing.md)
+- [ERD: core](./licensing/erd-core.md)
 
 ## Guides
 

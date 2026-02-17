@@ -45,6 +45,10 @@ Modules may depend only “downward” in the hierarchy. Example: `core.apps` ca
 - License context builder (per-tenant)
 - License API (apps query here)
 
+Detailed target architecture and contracts:
+
+- [Licensing overview](../licensing/overview.md)
+
 ## core.apps
 
 - App registry (install/upgrade/enable/disable)

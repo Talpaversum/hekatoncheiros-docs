@@ -60,3 +60,4 @@ Offline token requirements:
 ## Links
 
 - OpenAPI: [`openapi.yml`](./openapi.yml)
+- Licensing architecture docs: [`../../licensing/overview.md`](../../licensing/overview.md)
