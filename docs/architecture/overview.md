@@ -1,346 +1,103 @@
-# Hekatoncheiros Core – Internal Architecture Overview
-> Draft v0.1
+# Architecture Overview
 
-## Purpose of the Core
+Status: draft, early development.
 
-The Core is a platform kernel, not a business system.
-
-Its responsibilities are:
-
-- identity and access control
-- tenancy resolution
-- app coordination and isolation
-- licensing distribution
-- auditability
-- cross-tenant collaboration mediation
-
-The Core does not:
-
-- implement domain logic
-- enforce app limits
-- own app data
-- interpret app semantics
-
-## High-level architecture (conceptual)
-
-The Core is composed of strictly layered subsystems:
-
-- Ingress layer (HTTP/API)
-- Context resolution layer
-- Authorization & policy layer
-- Service layer
-- Integration layer (events, apps, UI)
-- Persistence layer
-- Installer & lifecycle management
-
-Each layer has no knowledge of layers below it beyond contracts.
-
-## Request lifecycle (authoritative flow)
-
-Every request entering the system follows this sequence:
-
-- Ingress
-  - request arrives via HTTP
-  - auth token or session extracted
-- Identity resolution
-  - user identity resolved
-  - authentication validated
-- Tenant resolution
-  - tenant determined via:
-    - domain
-    - header
-    - token claims
-  - `TenantContext` created
-- Authorization
-  - privileges evaluated
-  - delegation checked
-  - impersonation applied (if present)
-- License context
-  - active licenses for tenant resolved
-  - license metadata attached to request
-- Routing
-  - request routed to:
-    - core service
-    - app API
-    - UI surface
-- Audit
-  - action recorded (before and/or after execution)
-
-This pipeline is non-bypassable.
-
-## Tenant resolution & DB routing
-
-### TenantContext
-
-The Core creates a `TenantContext` object containing:
-
-- `tenant_id`
-- `tenancy_mode`
-- DB routing info
-- enabled apps
-- license state
-
-This object is immutable for the request lifetime.
-
-### Tenancy modes (implementation)
-
-#### A) Single-tenant self-host
-
-- one DB
-- schemas per app
-- no `tenant_id` columns required
-
-#### B) Multi-tenant (DB-per-tenant)
-
-- one DB per tenant
-- schemas:
-  - core
-  - `app_*`
-- DB connection selected via `TenantContext`
-
-#### C) Row-level tenancy (optional)
-
-- shared DB
-- `tenant_id` enforced via:
-  - query scoping
-  - PostgreSQL RLS
-- hidden from apps
-
-Apps never know which mode is active.
-
-## Persistence model
-
-### Core database schema
+Hekatoncheiros Core is a platform kernel, not a business application.
 
 Core owns:
 
-- users
-- tenants
-- departments
-- groups
-- privileges
-- delegations
-- impersonation records
-- licenses
-- audit logs
-- app registry
-
-Core schema is never accessed by apps directly.
-
-### App schemas
-
-- one schema per app
-- provisioned at install time
-- migrated independently
-- permissions enforced at DB role level where possible
-
-## App registry & lifecycle
-
-### App registry
-
-The Core maintains:
-
-- installed apps
-- app versions
-- manifest data
-- enabled/disabled state per tenant
-
-`app_id` is the global identity of an application.
-All provisioning (schemas, routing, registry entries) is keyed by `app_id`.
-
-#### UI execution model
-
-Applications contribute user interface elements declaratively via their manifests.
-
-The Core is the sole owner of UI execution, including:
-- routing
-- rendering
-- authentication
-- privilege-based visibility
-
-Applications do not run standalone web frontends.
-
-UI contributions are rendered inside the platform web shell according to the
-**Plugin Execution Model**.
-
-See: `app-execution-model.md`
-
-UI plugin distribution follows the **UI Plugin Distribution Model**.
-Core MUST own installation, storage, and runtime exposure of UI plugin
-artifacts. The web shell MUST NOT install or store plugin artifacts.
-
-See: `app-execution-model.md#ui-plugin-distribution-model`
-
-
-### App lifecycle
-
-- upload / register app
-- validate manifest
-- provision schema
-- register API routes
-- register events
-- enable app per tenant
-
-Disablement:
-
-- revokes routing
-- preserves data
-- preserves API read-only access if app declares it
-
-## API architecture
-
-### Core API
-
-- versioned
-- stable contracts
-- authenticated and authorized
-
-Exposes:
-
-- identity
-- privileges
+- identity and access control
 - tenant context
-- license data
-- audit submission
-- messaging primitives
+- app registry and lifecycle
+- licensing state
+- audit/event boundaries
+- UI plugin runtime exposure
 
-### App APIs
+Core does not own:
 
-- routed through the Core
-- context injected automatically
-- apps cannot access raw auth tokens
+- app business logic
+- app data semantics
+- app query optimization
+- app-specific limits beyond reporting license state
 
-## Licensing flow (runtime)
+## Current MVP Shape
 
-- license entered (online or offline)
-- core validates signature
-- license stored in core schema
-- license metadata derived:
-  - features
-  - limits
-  - expiry
-- license context attached to requests
-- apps query license state via Core API
+The current implementation is intentionally small:
 
-On expiration:
+- Fastify API under `/api/v1`
+- PostgreSQL
+- row-level/logical tenancy as the practical MVP mode
+- React web shell in a separate repository
+- app installation and UI plugin storage still evolving
 
-- core reports expired state
-- apps enforce read-only mode
-- no data deletion occurs
+DB-per-tenant and stronger installer automation are target architecture, not
+fully implemented runtime behavior yet.
 
-## Event system
+## Request Pipeline
 
-### Design goal
+Every request should follow the same conceptual path:
 
-- exactly-once semantics at logical level
+1. Ingress
+2. Authentication
+3. Tenant resolution
+4. Privilege evaluation
+5. License context resolution
+6. Route to Core or app integration
+7. Audit where appropriate
 
-### Practical implementation
+The important rule is that apps should not bypass Core-owned identity, tenant,
+privilege, or licensing context.
 
-- events persisted before delivery
-- each event has:
-  - unique ID
-  - source app
-  - tenant scope
-- consumers track processed IDs
-- retries allowed
-- side effects must be idempotent
+## Tenancy and Data
 
-Apps must assume retries are possible.
+Target model:
 
-## Cross-tenant collaboration
+- single-tenant self-host: one DB, app schemas
+- DB-per-tenant: one DB per tenant, `core` schema plus app schemas
+- row-level tenancy: shared DB with tenant scoping
 
-### Core mediation
+Current MVP:
 
-Core resolves:
+- shared PostgreSQL database
+- Core schema
+- app schema isolation where app support exists
 
-- foreign tenant identities
-- shared object references
+Apps must not access the Core schema directly.
 
-Apps receive:
+## App Model
 
-- abstract collaboration tokens
-- permission-scoped views
+Applications integrate through:
 
-Apps never:
+- manifest metadata
+- optional backend service
+- UI plugin artifact
+- declared API/event/privilege contracts
 
-- resolve foreign users
-- query foreign tenant DBs
+The web shell renders app UI. Apps must not provide their own user-facing login
+or standalone SPA as the primary platform UI.
 
-## Impersonation & delegation (runtime)
+Core must own installed UI plugin artifacts and expose runtime `ui_url` values.
+The web shell loads from Core-provided URLs.
 
-### Impersonation
+## Licensing
 
-- applied at context layer
-- visible in audit logs
-- explicit in API context
+Core validates and stores license/entitlement state.
 
-### Delegation
+Apps consume license context and enforce app-specific behavior such as:
 
-- evaluated per action
-- action-scoped
-- time-limited
-- revocable
+- read-only mode
+- feature availability
+- usage limits
 
-Apps receive:
+License expiry must be non-destructive.
 
-- effective user
-- delegation metadata
+## Open Questions
 
-## Security boundaries
+- final app migration authority for all installation modes
+- standalone app database ownership
+- production installer flow
+- production packaging for Docker and Kubernetes
+- custom app hostnames and tenant resolution
 
-### Hard boundaries
-
-- no shared DB access
-- no shared code imports
-- no implicit privileges
-- no hidden APIs
-
-### Soft boundaries (enforced by tooling)
-
-- lint rules
-- CI checks
-- manifest validation
-- agent rules (Cline)
-
-## Installer & lifecycle
-
-### Installer responsibilities
-
-- initial config
-- tenancy mode selection
-- DB provisioning
-- admin creation
-- one-time execution
-
-Installer must:
-
-- disable itself after completion
-- never run during normal operation
-
-## Observability & audit
-
-Core guarantees:
-
-- every privileged action is auditable
-- impersonation and delegation are visible
-- license changes are logged
-- app actions can emit audit events
-
-## Non-goals (explicit)
-
-The Core will not:
-
-- optimize app queries
-- understand app schemas
-- auto-scale app resources
-- interpret app business logic
-
-## Status
-
-This architecture is:
-
-- intentionally conservative
-- hostile to shortcuts
-- friendly to long-term maintenance
-- compatible with AGPL and marketplaces
-- suitable for agent-assisted development
+Keep detailed decisions in ADRs and focused reference docs rather than growing
+this overview.

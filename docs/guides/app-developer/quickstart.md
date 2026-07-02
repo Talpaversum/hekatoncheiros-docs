@@ -1,116 +1,56 @@
 # App Developer Quickstart
 
-This guide shows how to implement an application for the Hekatoncheiros platform.
+Status: draft.
 
-It assumes you have read and accepted the App Manifest Specification.
+HC apps are plugins integrated into the platform shell. They are not standalone
+user-facing SPAs with their own login.
 
-## Execution model (mandatory)
+## Minimal App Repository
 
-Hekatoncheiros applications run as **plugins**.
+```text
+manifest/app-manifest.json
+src/plugin.ts
+src/server/*            # optional backend
+```
 
-The execution model is defined by the App Manifest and enforced by the platform kernel.
+The manifest is the integration contract. It declares identity, privileges,
+API/UI integration, and licensing expectations.
 
-In particular:
+## UI Plugin
 
-- Applications contribute UI components
-- UI is rendered inside the platform web shell
-- Applications do not run standalone web frontends
-- Applications do not own routing or authentication
+The UI plugin exports a registration function, for example:
 
-If your application requires a standalone SPA or its own login flow, it is not compatible with this platform.
+```ts
+export function register(appContext) {
+  return {
+    routes: [],
+    nav_entries: [],
+  };
+}
+```
 
-## What you build
+The platform provides context and API access. Apps must not implement their own
+platform authentication.
 
-A typical application repository contains:
+## Local Development
 
-- `manifest/app-manifest.json`  
-  Declarative description of identity, privileges, APIs, and UI contribution.
-- `src/plugin.ts`  
-  UI plugin entrypoint exporting components and a registration function.
-- `src/server/*` (optional)  
-  Backend services exposed via HTTP APIs.
+1. Run Core.
+2. Run the app backend if the app has one.
+3. Build or watch the UI plugin artifact.
+4. Install/register the app through Core tooling.
 
-The manifest is the authoritative contract.
-Your code must conform to it.
+Development servers are allowed for iteration only. Runtime UI must still be
+loaded by the platform shell.
 
-## UI plugin structure
+## Production Direction
 
-Your UI code is an importable module.
+Production app distribution should use prebuilt UI plugin artifacts. Core owns
+artifact download, validation, storage, and runtime `ui_url` generation.
 
-It must export a registration function that returns UI contributions declared in the manifest.
+Build-on-install is acceptable only as a development convenience for now.
 
-Conceptually:
+## See Also
 
-- pages (React components)
-- optional widgets or panels
-- navigation metadata (aligned with the manifest)
-
-The platform provides an `appContext` containing:
-- authenticated API access
-- user and tenant context
-- configuration and feature flags
-
-Applications must not implement their own authentication or session handling.
-
-## Local development
-
-Recommended workflow:
-
-1. Run the core platform locally.
-2. Run the app backend locally (if applicable).
-3. Build or watch the UI plugin module.
-
-A local dev server may be used for faster iteration, but:
-- it is a developer tool only
-- it must not be treated as a user-facing frontend
-- production builds must be consumable as a module by the core shell
-
-## Packaging and installation
-
-Applications are installed through platform tooling (installer or marketplace).
-
-During installation:
-- the manifest is validated
-- privileges are approved
-- UI contributions are registered
-
-At runtime:
-- the core loads the UI module
-- routes and navigation are owned by the core
-- privileges are enforced centrally
-
-## Build and distribution model (normative)
-
-UI code MUST be delivered as a **UI plugin artifact** (typically a JavaScript
-ESM bundle such as `plugin.js`).
-
-### Development mode
-
-- Development mode is a developer convenience workflow.
-- Development mode MUST NOT be treated as the reference production model.
-- Developers MAY build the UI plugin artifact manually, for example:
-  - `npm run build:plugin`
-- Installer-based installation MAY be executed only after the artifact has been
-  built.
-
-### Production / Marketplace mode
-
-- Production distribution MUST use prebuilt UI plugin artifacts.
-- Build-on-install MUST NOT be used.
-- Core MUST:
-  - download the artifact from a declared source
-  - verify artifact integrity (at least checksum)
-  - store the artifact in core-controlled storage
-  - expose the artifact through a stable core-owned URL
-
-### Runtime loading
-
-- The web shell MUST NOT install, build, or store UI plugin artifacts.
-- The web shell MUST load plugin code dynamically from `ui_url` provided by
-  core at runtime.
-
-## Next steps
-
-- App Manifest Specification
-- UI Integration Guide
-- Privileges and Authorization Guide
+- [Manifest](./manifest.md)
+- [UI integration](./ui-integration.md)
+- [Application execution model](../../architecture/app-execution-model.md)

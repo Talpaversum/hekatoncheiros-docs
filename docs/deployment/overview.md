@@ -1,184 +1,68 @@
-# Deployment overview
+# Deployment
 
-Status: draft for development and early self-hosted installations.
+Status: early development.
 
-This section defines deployment procedures for Hekatoncheiros (HC) in three
-operational modes:
+This section is intentionally short. HC is not production-ready yet; deployment
+docs should describe what can be run now and name unresolved decisions without
+pretending they are solved.
 
-- Baremetal / VM
-- Docker / Docker Compose
-- Kubernetes
+## Current supported path
 
-The current implementation is still pre-production. Deployment material must
-therefore distinguish between:
-
-- **MVP now**: what can be run with the current repositories.
-- **Target production**: the intended operational model once installer,
-  packaging, artifact validation, and lifecycle automation are complete.
-
-## Deployment goals
-
-- Allow a self-hosted HC instance to run on one server, a VM, Docker, or a
-  Kubernetes cluster.
-- Keep the Core as the owner of identity, tenancy, app lifecycle, licensing,
-  audit, and UI plugin runtime URLs.
-- Support local application installation from official sources or uploaded
-  application packages.
-- Support externally operated applications as a separate integration mode.
-- Keep database location configurable in every deployment mode.
-- Start with HTTP-only deployments during development.
-- Add HTTPS later through a reverse proxy or ingress layer.
-
-## Baseline components
-
-The base HC deployment contains:
+Use Docker Compose for local self-hosted testing:
 
 - PostgreSQL
 - `hekatoncheiros-core`
 - `hekatoncheiros-web`
+- HTTP only
+- local image builds
 
-Application deployment is described generically. A concrete app may add:
+Start here:
 
-- an app backend service
-- app database schema or database access credentials
-- a UI plugin artifact
-- internal installer endpoints
-- migrations or migration orchestration
+- [Docker deployment](./docker.md)
 
-## Default ports in development
+## Planned deployment modes
 
-- Core API: `3000`
-- Web shell dev server: `5173`
-- Example app backend: `4010`
-- Author registry: `4020`
-- Licensing server: `4030`
+- [Baremetal / VM](./baremetal.md)
+- [Kubernetes](./kubernetes.md)
 
-Production deployments should not rely on these public ports directly. They
-should place a reverse proxy, gateway, or ingress in front of the services.
+These are sketches for now, not production runbooks.
 
-## URL model
+## Shared assumptions
 
-The default recommendation is one canonical HC base URL per instance, for
-example:
-
-```text
-http://hc.example.com
-```
-
-The reverse proxy or ingress routes paths to internal services:
-
-- `/api/v1/*` -> Core API
-- `/app/*` -> web shell routes rendered by the platform shell
-- Core-owned UI plugin URLs -> Core API/static artifact serving
-
-Custom application hostnames should be supported later as aliases, for example:
-
-```text
-http://inv.example.com
-```
-
-Such hostnames should still resolve into the same HC instance and should not
-make the application own authentication, routing, or UI execution. A possible
-future model is:
-
-- `inv.example.com` as CNAME or DNS alias to the HC ingress address
-- host-based routing maps the request to the same web shell
-- Core resolves the requested host to an app route or tenant context
-
-This requires explicit design before production use because it affects tenant
-resolution, app routing, cookies, CORS, trusted origins, and audit context.
-
-## TLS model
-
-During development the default deployment is HTTP-only.
-
-HTTPS is expected to be added later at the reverse proxy or ingress boundary,
-for example:
-
-- Traefik
-- nginx
-- Caddy
-- Kubernetes Ingress Controller
-- cloud load balancer
-
-Internal traffic behind the proxy may stay HTTP in development. Production
-hardening must revisit this, especially for installer channels and internal app
-endpoints.
+- One canonical HC entrypoint is preferred, for example `http://hc.example.com`.
+- The web shell owns user-facing UI routing.
+- Core owns `/api/v1/*`, app lifecycle, and runtime UI plugin URLs.
+- App-specific hostnames, such as `inv.example.com`, are future work.
+- HTTPS will be added later through a reverse proxy or ingress.
+- Docker Hub or another public image registry is not used yet.
 
 ## Database placement
 
-Every deployment mode supports two database placement choices:
+Each deployment mode should support:
 
-- **Managed by deployment**: the deployment creates PostgreSQL locally, in
-  Docker, or in Kubernetes.
-- **External database**: the operator provides database credentials during
-  installation and the deployment does not create PostgreSQL.
+- a deployment-managed PostgreSQL instance
+- an externally provided PostgreSQL instance
 
-Defaults:
+Defaults for now:
 
-- Baremetal / VM: operator provides PostgreSQL and credentials.
-- Docker: Docker Compose creates PostgreSQL unless external DB is selected.
-- Kubernetes: Kubernetes manifests create PostgreSQL unless external DB is
-  selected.
+- baremetal: operator provides DB credentials
+- Docker: Compose starts PostgreSQL
+- Kubernetes: in-cluster PostgreSQL sketch, external DB later
 
-## Application installation modes
+## Open issue: standalone apps
 
-HC must support these application inclusion modes:
+Standalone app integration is unresolved.
 
-- **Official source install**: HC installs an app from an official source.
-- **Local package upload**: an operator uploads app files to the HC instance;
-  Core validates them and installs them with the same lifecycle as official
-  source installs.
-- **Standalone app integration**: the app is operated separately and is not
-  started or managed by the target HC instance.
+The unresolved question is whether and how an app operated outside the target HC
+instance can safely use the target HC tenant/app database model.
 
-For Core-managed app installations, the target direction is:
-
-- Core validates manifest and package metadata.
-- Core builds or installs runtime artifacts according to the deployment mode.
-- Core stores and serves UI plugin artifacts through Core-owned URLs.
-- Core controls app lifecycle state.
-
-During development it is acceptable to build container images locally during
-installation. Images are not published to Docker Hub or another registry by
-default.
-
-## Open architectural issue: standalone apps and database ownership
-
-Standalone application integration is unresolved.
-
-The tension:
-
-- A standalone app may need its own database lifecycle and operational control.
-- HC requires apps to work against the target HC instance's tenant/app data
-  model and isolation rules.
-- Apps must not access Core schema directly.
-- Apps should not create databases in the target HC instance.
-
-This affects:
+This still needs a decision for:
 
 - DB credentials
-- schema ownership
-- migration authority
+- migrations
 - backup and restore boundaries
 - network policy
-- app disablement and uninstall semantics
+- disable/uninstall lifecycle
 
-Until resolved, deployment documentation must treat standalone apps as a
-separate future integration mode and avoid presenting it as production-ready.
-
-See also the TODO item in `docs/ROADMAP.md`.
-
-## Configuration and secrets
-
-Recommended baseline:
-
-- Baremetal / VM: environment file owned by the service user, permissions
-  `0600`.
-- Docker: `.env` next to `docker-compose.yml`, not committed to git.
-- Kubernetes: `Secret` for sensitive values and `ConfigMap` for non-sensitive
-  configuration.
-
-Secrets must never be logged and must not be embedded in generated static web
-assets.
-
+Until this is resolved, deployment docs should treat standalone apps as future
+work.
