@@ -35,6 +35,14 @@ This index separates architecture, ADR decisions, guides, and reference material
 
 - [Installer configuration](./guides/platform-operator/installer-configuration.md)
 
+### Deployment
+
+- [Deployment overview](./deployment/overview.md)
+- [Baremetal / VM deployment](./deployment/baremetal.md)
+- [Docker deployment](./deployment/docker.md)
+- [Kubernetes deployment](./deployment/kubernetes.md)
+- [Operations](./deployment/operations.md)
+
 ### App developer
 
 - [Quick Start](./guides/app-developer/quickstart.md)
