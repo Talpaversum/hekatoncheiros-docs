@@ -19,6 +19,45 @@ This created tight coupling between core and apps, violated separation of concer
 4. Application manifests are collected, validated, and normalized during installation.
 5. Application installation is a separate process (e.g. marketplace or installer wizard).
 6. All core subsystems (proxy, navigation, privileges) use the same installation store as the single source of truth.
+7. A missing license must not block installation. For apps with
+   `manifest.licensing.required=true`, Core blocks tenant runtime use until a
+   selected active license exists.
+
+## Registry vs Catalog
+
+The installation registry and the application catalog are separate concepts.
+
+- **Application catalog**: list of apps that can be installed into an instance,
+  with display metadata, manifest/source metadata, license requirements, and
+  acquisition/activation hints. It may be backed by a marketplace service,
+  curated feed, private admin feed, or manually entered manifest URL.
+- **Installation registry**: local Core-owned runtime state for apps already
+  staged into this instance. It stores normalized manifest data, Core-hosted UI
+  artifact URL, app backend base URL, privileges, navigation entries, and
+  enabled/runtime flags.
+
+The catalog answers "what can I install?". The installation registry answers
+"what is installed here and how does Core route/use it?".
+
+`hc-author-registry` is not the application catalog. Its role is author identity
+and trust anchoring for licensing: globally unique `author_id`, root-signed
+author certificates, root JWKS, and revocation snapshots.
+
+## License Gate Policy
+
+Installation is allowed for both free and license-required apps. This lets an
+operator stage artifacts, inspect metadata, import/activate a license later, and
+keep audit history without conflating acquisition with runtime entitlement.
+
+For `manifest.licensing.required=true`, Core must enforce a runtime gate:
+
+- the app is omitted from tenant runtime navigation/catalog responses without a
+  selected active license
+- proxied app API calls are rejected without a selected active license
+- license expiry is non-destructive and must not uninstall or delete app data
+
+Apps still receive entitlement context and remain responsible for app-specific
+feature, limit, and read-only behavior.
 
 ## Consequences
 
@@ -26,6 +65,7 @@ This created tight coupling between core and apps, violated separation of concer
 - Support for third-party apps
 - Runtime install and uninstall without code changes
 - No filesystem or repository coupling
+- Operators can install license-required apps before completing license activation
 
 ## Temporary Dev Installer API (MVP)
 

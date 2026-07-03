@@ -65,8 +65,18 @@ licensing:
   required: true | false
 ```
 
-- `required=true`: install/enable blocked without valid selectable license.
-- `required=false`: install allowed; feature enforcement happens at runtime.
+- `required=true`: install is allowed without a license, but tenant runtime use is blocked until the tenant has a selected active license for the app.
+- `required=false`: install and runtime use are allowed without a license; optional feature enforcement may still happen inside the app.
+
+Installation is technical provisioning: manifest validation, artifact fetch/storage,
+proxy metadata, and app lifecycle records. Licensing gates activation/use, not the
+ability to stage an application into the instance.
+
+Core must enforce the runtime boundary for license-required apps:
+
+- hide the app from tenant runtime navigation/catalog responses unless a selected active license exists
+- reject proxied app API calls without a selected active license
+- expose entitlement state so the app can apply its own non-destructive feature and limit policy
 
 Uninstall behavior:
 
