@@ -79,6 +79,19 @@ or standalone SPA as the primary platform UI.
 Core must own installed UI plugin artifacts and expose runtime `ui_url` values.
 The web shell loads from Core-provided URLs.
 
+The application catalog is discovery and acquisition state. Installing from the
+catalog creates or stages local runtime state:
+
+- `external`: Core stores the installed app and connects to an already running
+  app base URL.
+- `stage_only`: Core records the selected plan without enabling runtime use.
+- `compose`: target mode where Core starts an app-owned compose bundle after
+  admin approval; currently planned, not fully implemented.
+
+Licensing does not block installation. It blocks tenant runtime access when the
+manifest declares `licensing.required=true` and no selected active license
+exists.
+
 ## Licensing
 
 Core validates and stores license/entitlement state.
@@ -95,6 +108,7 @@ License expiry must be non-destructive.
 
 - final app migration authority for all installation modes
 - standalone app database ownership
+- Core-managed compose runtime manager and deployment policy
 - production installer flow
 - production packaging for Docker and Kubernetes
 - custom app hostnames and tenant resolution

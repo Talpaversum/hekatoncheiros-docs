@@ -271,6 +271,100 @@ paths:
         "200":
           description: Installed app list
 
+  /apps/catalog:
+    get:
+      tags: [Apps]
+      summary: List local application catalog entries.
+      operationId: listAppCatalog
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      responses:
+        "200":
+          description: Catalog entries with install/license state
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /apps/catalog/entries/from-manifest:
+    post:
+      tags: [Apps]
+      summary: Create or refresh a catalog entry from an app manifest base URL.
+      operationId: createCatalogEntryFromManifest
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [base_url]
+              properties:
+                base_url:
+                  type: string
+                  format: uri
+                summary:
+                  type: string
+                  nullable: true
+                trust_status:
+                  type: string
+                  enum: [dev, manual, unverified]
+      responses:
+        "201":
+          description: Catalog entry
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /apps/catalog/entries/{app_id}/install:
+    post:
+      tags: [Apps]
+      summary: Install or stage an app from the local catalog.
+      operationId: installCatalogEntry
+      parameters:
+        - $ref: "#/components/parameters/AppId"
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+        - "platform.apps.runtime.manage for mode=compose"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum: [external, stage_only, compose]
+                  default: external
+      responses:
+        "201":
+          description: Installed via external mode
+        "202":
+          description: Staged deployment plan
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Catalog manifest hash changed or app slug conflict
+        "501":
+          description: Core-managed compose runtime is not implemented yet
+
   /apps/{slug}/entitlement:
     get:
       tags: [Apps]

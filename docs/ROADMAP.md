@@ -11,6 +11,7 @@
 - installation lifecycle
 - local application catalog entries
 - catalog feed data model
+- catalog install modes: external, stage-only, and planned Core-managed compose
 
 ## Phase 2 – Core2Core Integration
 
@@ -38,6 +39,9 @@
     hranice a lifecycle stav pro standalone aplikace.
 - Zatím nepoužívat Docker Hub ani jiný public image registry; vývojové
   instalace mohou image buildovat lokálně při instalaci.
+- Navrhnout a implementovat Core runtime manager pro aplikační compose balíčky:
+  bezpečné umístění compose souborů, allowlist publish/volume/network pravidel,
+  auditované schválení adminem a lifecycle start/stop/update.
 - Vývojové deploymenty držet na HTTP; HTTPS doplnit později přes proxy nebo
   ingress terminaci.
 - Zrevidovat dlouhodobou hranici `hc-author-registry`: zatím zůstává oddělené,

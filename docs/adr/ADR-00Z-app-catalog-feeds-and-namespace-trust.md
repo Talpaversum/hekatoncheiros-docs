@@ -28,6 +28,29 @@ channel; it must not become the authority that decides who owns an app namespace
 5. Runtime entitlement remains in Core's licensing model.
 6. Author and namespace identity remains under the author identity authority.
 
+## Installation And Deployment
+
+Catalog install is an admin action. A license-required app may still be
+installed; Core blocks tenant runtime use until a selected active license exists.
+
+Core supports these install modes conceptually:
+
+- `external`: install the app registry record and use the manifest's existing
+  base URL.
+- `stage_only`: store/return the selected deployment plan without creating the
+  runtime installation entry.
+- `compose`: Core-managed compose deployment. The catalog contract may describe
+  a compose file, service name, project name, and internal base URL, but the MVP
+  backend only returns an approval plan until the runtime manager is implemented.
+
+The catalog entry stores `deployment_json` separately from the manifest. The
+manifest describes integration with Core; deployment metadata describes how this
+instance may run or reach the app.
+
+Core-managed compose must remain an operator/admin capability. It must not
+silently allow published ports or host mounts from a remote feed; those require
+explicit policy and approval.
+
 ## Feed Model
 
 The canonical feed endpoint is:
@@ -55,7 +78,13 @@ Feed items describe app releases:
       "author_id": "aut_...",
       "author_namespace": "talpaversum",
       "license_required": true,
-      "license_issuer_url": "https://licensing.example"
+      "license_issuer_url": "https://licensing.example",
+      "deployment": {
+        "type": "compose",
+        "compose_file": "docker-compose.app.yml",
+        "service_name": "inventory",
+        "internal_base_url": "http://inventory:3000"
+      }
     }
   ]
 }
