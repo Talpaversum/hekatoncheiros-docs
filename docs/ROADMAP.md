@@ -51,3 +51,15 @@
   ingress terminaci.
 - Zrevidovat dlouhodobou hranici `hc-author-registry`: zatím zůstává oddělené,
   ale může dávat větší smysl jako volitelný authority mode v Core.
+- Zapojit `hc-author-registry` do licenčního author onboardingu:
+  - lokální dev flow nesmí dlouhodobě nahrazovat registry falešnou autoritou,
+  - registry má vydávat `author_id`, registrovat autorovy veřejné klíče,
+    vydávat `author_cert_jws` a publikovat root JWKS/revocation snapshoty,
+  - `hc-app-licensing` má používat certifikát vydaný registry místo ručně
+    generovaného dev certifikátu.
+- Rozhodnout produktovou hranici `hc-app-licensing`:
+  - dnes je to backend issuer bez UI a bez aplikačního manifestu,
+  - navrhnout, zda má zůstat samostatnou autor/vendor službou, nebo dostat
+    instalovatelný Hekatoncheiros app manifest a Core Console UI,
+  - pokud bude instalovatelná, doplnit manifest, compose balíček, UI plugin a
+    administraci zákazníků, grantů, vydaných licencí a revoke workflow.
