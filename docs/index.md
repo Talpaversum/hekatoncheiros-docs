@@ -6,6 +6,7 @@ This index separates architecture, ADR decisions, guides, and reference material
 
 - [ADR-00X: Application Installation Registry](./adr/ADR-00X-app-installation-registry.md)
 - [ADR-00Y: Core-triggered App-Managed Migrations](./adr/ADR-00Y-core-triggered-app-managed-migrations.md)
+- [ADR-00Z: Application Catalog Feeds and Namespace Trust](./adr/ADR-00Z-app-catalog-feeds-and-namespace-trust.md)
 
 ## Architecture
 

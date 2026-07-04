@@ -9,10 +9,14 @@
 - licensing enforcement
 - signed manifests
 - installation lifecycle
+- local application catalog entries
+- catalog feed data model
 
 ## Phase 2 – Core2Core Integration
 
 - remote apps
+- application catalog feed sync
+- namespace trust / protected namespace policy
 - OAuth trust
 - no shared DB
 - signed cross-core tokens
@@ -36,3 +40,5 @@
   instalace mohou image buildovat lokálně při instalaci.
 - Vývojové deploymenty držet na HTTP; HTTPS doplnit později přes proxy nebo
   ingress terminaci.
+- Zrevidovat dlouhodobou hranici `hc-author-registry`: zatím zůstává oddělené,
+  ale může dávat větší smysl jako volitelný authority mode v Core.
