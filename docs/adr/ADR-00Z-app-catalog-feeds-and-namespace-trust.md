@@ -92,6 +92,20 @@ Feed items describe app releases:
 
 MVP Core may store feed-ready metadata before automated feed sync is implemented.
 
+MVP feed sync is operator-triggered:
+
+1. Admin creates a feed source with `name`, `feed_url`, and `trust_mode`.
+2. Admin runs sync manually.
+3. Core fetches the feed JSON, then fetches each item manifest through the
+   normal manifest fetcher.
+4. If `manifest_sha256`, `app_id`, or `version` is present in the feed item,
+   Core verifies it against the fetched manifest before upserting the entry.
+5. Imported entries use `source_type=feed`; `manual` feed trust maps to
+   `trust_status=unverified` until author/release verification exists.
+
+For local development, HTTP feed URLs are allowed only when their origin is in
+Core's trusted origins list.
+
 ## Namespace Trust
 
 `app_id` uses namespace format:

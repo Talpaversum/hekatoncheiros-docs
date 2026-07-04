@@ -12,11 +12,12 @@
 - local application catalog entries
 - catalog feed data model
 - catalog install modes: external, stage-only, and planned Core-managed compose
+- manual catalog feed source sync
 
 ## Phase 2 – Core2Core Integration
 
 - remote apps
-- application catalog feed sync
+- scheduled application catalog feed sync
 - namespace trust / protected namespace policy
 - OAuth trust
 - no shared DB

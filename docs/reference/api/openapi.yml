@@ -324,6 +324,119 @@ paths:
         "403":
           $ref: "#/components/responses/Forbidden"
 
+  /apps/catalog/sources:
+    get:
+      tags: [Apps]
+      summary: List application catalog feed sources.
+      operationId: listAppCatalogSources
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      responses:
+        "200":
+          description: Catalog feed source list
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Apps]
+      summary: Create or re-enable a catalog feed source.
+      operationId: createAppCatalogSource
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, feed_url]
+              properties:
+                name:
+                  type: string
+                feed_url:
+                  type: string
+                  format: uri
+                trust_mode:
+                  type: string
+                  enum: [dev, manual, verified, official]
+                  default: manual
+      responses:
+        "201":
+          description: Catalog feed source
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /apps/catalog/sources/{id}:
+    patch:
+      tags: [Apps]
+      summary: Enable or disable a catalog feed source.
+      operationId: updateAppCatalogSource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [is_enabled]
+              properties:
+                is_enabled:
+                  type: boolean
+      responses:
+        "200":
+          description: Catalog feed source
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /apps/catalog/sources/{id}/sync:
+    post:
+      tags: [Apps]
+      summary: Manually synchronize a catalog feed source.
+      operationId: syncAppCatalogSource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      responses:
+        "200":
+          description: Feed sync result
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
   /apps/catalog/entries/{app_id}/install:
     post:
       tags: [Apps]
