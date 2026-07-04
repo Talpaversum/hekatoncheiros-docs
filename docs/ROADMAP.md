@@ -13,11 +13,15 @@
 - catalog feed data model
 - catalog install modes: external, stage-only, and planned Core-managed compose
 - manual catalog feed source sync
+- public instance app feed export
+- admin publish/unpublish controls for installed apps
 
 ## Phase 2 – Core2Core Integration
 
 - remote apps
 - scheduled application catalog feed sync
+- "suggest app for feed" workflow with pending publication requests
+- admin-issued publish tokens for pre-approved namespaces/apps/CI pipelines
 - namespace trust / protected namespace policy
 - OAuth trust
 - no shared DB

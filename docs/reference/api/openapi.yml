@@ -21,6 +21,15 @@ tags:
   - name: Audit
 
 paths:
+  /.well-known/hc/app-catalog.json:
+    get:
+      tags: [Apps]
+      summary: Public application catalog feed exported by this instance.
+      operationId: getPublicAppCatalogFeed
+      responses:
+        "200":
+          description: Public app catalog feed
+
   /auth/login:
     post:
       tags: [Auth]
@@ -477,6 +486,42 @@ paths:
           description: Catalog manifest hash changed or app slug conflict
         "501":
           description: Core-managed compose runtime is not implemented yet
+
+  /apps/catalog/entries/{app_id}/publication:
+    patch:
+      tags: [Apps]
+      summary: Publish or unpublish an installed app in this instance feed.
+      operationId: setCatalogEntryPublication
+      parameters:
+        - $ref: "#/components/parameters/AppId"
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [published]
+              properties:
+                published:
+                  type: boolean
+                note:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Updated catalog entry
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: App is not installed/enabled and cannot be published
 
   /apps/{slug}/entitlement:
     get:

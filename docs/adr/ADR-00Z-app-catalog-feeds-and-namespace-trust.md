@@ -51,6 +51,26 @@ Core-managed compose must remain an operator/admin capability. It must not
 silently allow published ports or host mounts from a remote feed; those require
 explicit policy and approval.
 
+## Publishing To This Instance Feed
+
+Local installation does not automatically publish an app to other instances.
+Core tracks feed publication separately from installation:
+
+- `draft`: known locally but not published
+- `pending`: proposed for publication, waiting for admin approval
+- `published`: included in this instance's public feed
+- `rejected`: reviewed and rejected for feed publication
+
+The MVP supports direct admin publication. Admins may publish or unpublish
+installed/enabled catalog entries from the catalog UI. The public feed endpoint
+only emits entries with `published=true` and `publish_status=published`.
+
+Future approval automation may use admin-issued publish tokens. A token can
+represent pre-approval for a namespace, app, CI pipeline, author identity, or
+limited time window. Submissions using such a token may move directly to
+`published`; submissions without one should create a `pending` request for admin
+review.
+
 ## Feed Model
 
 The canonical feed endpoint is:
@@ -91,6 +111,15 @@ Feed items describe app releases:
 ```
 
 MVP Core may store feed-ready metadata before automated feed sync is implemented.
+
+The same endpoint is used for exporting this instance feed:
+
+```text
+GET /.well-known/hc/app-catalog.json
+```
+
+Import and export are intentionally separate. A Core instance can import many
+feeds, but only entries explicitly published by its admin are exported.
 
 MVP feed sync is operator-triggered:
 
