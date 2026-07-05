@@ -67,6 +67,10 @@
     aplikace nebo feed vrstvy je hotový v admin-gated MVP podobě,
   - app-auth webhook `POST /api/v1/apps/installed/update-signal` pro
     `update_signal` bez admin session je hotový,
+  - ruční admin akce pro vydání krátkodobého app runtime JWT pro instalovanou
+    aplikaci je hotová,
+  - doplnit bezpečné předání/obnovu app runtime tokenu do Core-managed
+    aplikačního runtime bez ručního kopírování,
   - doplnit feed/author podepsané update signály pro zdroje mimo instalovanou
     app runtime identitu,
   - volitelný automatický refresh pro trusted/official zdroje,
