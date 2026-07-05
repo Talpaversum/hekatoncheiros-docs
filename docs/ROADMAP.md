@@ -59,6 +59,8 @@
     uloženou instalací je hotová,
   - pasivní katalogový signál `catalog_update` v seznamu nainstalovaných aplikací
     je hotový,
+  - souhrnný admin panel pro katalogové update/stale signály v Apps managementu
+    je hotový,
   - ruční admin akce `Refresh catalog` pro obnovení katalogového záznamu z
     nainstalované aplikace je hotová,
   - notifikace z aplikace nebo feedu, že manifest/UI artefakt má novou verzi,
