@@ -280,6 +280,57 @@ paths:
         "200":
           description: Installed app list
 
+  /apps/installed/{app_id}/refresh-artifact:
+    post:
+      tags: [Apps]
+      summary: Refresh an installed app manifest and UI plugin artifact.
+      operationId: refreshInstalledAppArtifact
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      parameters:
+        - name: app_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: URL-encoded installed app id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+      responses:
+        "200":
+          description: Artifact refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, app_id, refreshed_at]
+                properties:
+                  status:
+                    type: string
+                    enum: [installed]
+                  app_id:
+                    type: string
+                  refreshed_at:
+                    type: string
+                    format: date-time
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
   /apps/catalog:
     get:
       tags: [Apps]

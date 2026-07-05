@@ -6,7 +6,7 @@
 - schema-per-app (`app_<app_id>`)
 - migration via core (`/.well-known/hc/migrations*`)
 - hash-verified migrations (SHA-256, MVP)
-- licensing enforcement
+- licensing enforcement for tenant runtime navigation/API access
 - signed manifests
 - installation lifecycle
 - local application catalog entries
@@ -15,6 +15,11 @@
 - manual catalog feed source sync
 - public instance app feed export
 - admin publish/unpublish controls for installed apps
+- Core-owned UI plugin artifact storage and manual artifact refresh
+- Core Console management UI for catalog, installed apps, tenant/platform settings,
+  RBAC/user/tenant management, licensing activation, toast feedback, and Help
+  dropdown sections
+- manifest-provided procedural Help entries (`integration.ui.help_entries`)
 
 ## Phase 2 – Core2Core Integration
 
@@ -47,6 +52,12 @@
 - Navrhnout a implementovat Core runtime manager pro aplikační compose balíčky:
   bezpečné umístění compose souborů, allowlist publish/volume/network pravidel,
   auditované schválení adminem a lifecycle start/stop/update.
+- Rozšířit lifecycle pro aplikační artefakty:
+  - ruční admin akce `Refresh artifact` v managementu nainstalovaných aplikací
+    je hotová,
+  - notifikace z aplikace nebo feedu, že manifest/UI artefakt má novou verzi,
+  - volitelný automatický refresh pro trusted/official zdroje,
+  - audit a policy guard pro automatické změny runtime UI.
 - Vývojové deploymenty držet na HTTP; HTTPS doplnit později přes proxy nebo
   ingress terminaci.
 - Zrevidovat dlouhodobou hranici `hc-author-registry`: zatím zůstává oddělené,

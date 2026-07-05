@@ -310,6 +310,7 @@ From the app’s perspective:
 Apps may declare:
 
 - navigation entries
+- procedural Help entries
 - UI surfaces
 - configuration panels
 
@@ -334,6 +335,44 @@ Relationship model:
 - manifest → declaration of artifact source reference
 - installer → artifact download and validation
 - app registry → runtime `ui_url` generated and owned by core
+
+### Procedural Help entries
+
+Apps MAY contribute Help guides through `integration.ui.help_entries`.
+
+Help entries are goal-oriented procedures, not a primary feature index. A good
+entry answers "How do I achieve this state?" and includes:
+
+- `title`: goal-oriented name of the procedure
+- `summary`: short explanation of when to use it
+- `category`: Help dropdown section, for example `Inventory`
+- `steps`: ordered operator/user steps
+- `outcome`: expected result after completing the steps
+- `path`: optional in-shell destination where the action is performed
+- `required_privileges`: privileges required to see the guide
+
+Example:
+
+```json
+{
+  "title": "Vytvořit šablonu inventární položky",
+  "summary": "Postup pro vytvoření opakovaně použitelné šablony s tenant scope a vlastními atributy.",
+  "outcome": "Nová šablona bude dostupná při vytváření inventárních položek.",
+  "category": "Inventory",
+  "steps": [
+    "Otevři Inventory / Typy atributů a připrav atributy, které chceš v šabloně používat.",
+    "Přejdi do Inventory / Šablony.",
+    "Vyplň název šablony a vyber tenant scope.",
+    "Klikni na plus u atributů a přidej pole, která má šablona obsahovat.",
+    "Označ povinná pole a šablonu ulož."
+  ],
+  "path": "/app/inventory/templates",
+  "required_privileges": ["inventory.read"]
+}
+```
+
+Core filters app-provided Help entries through the same installed app visibility,
+license, and privilege rules used by runtime app navigation.
 
 ## Prohibited Behavior (Hard Enforcement)
 

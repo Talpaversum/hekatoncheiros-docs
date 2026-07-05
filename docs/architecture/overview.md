@@ -72,6 +72,7 @@ Applications integrate through:
 - optional backend service
 - UI plugin artifact
 - declared API/event/privilege contracts
+- optional procedural Help entries
 
 The web shell renders app UI. Apps must not provide their own user-facing login
 or standalone SPA as the primary platform UI.
@@ -91,6 +92,18 @@ catalog creates or stages local runtime state:
 Licensing does not block installation. It blocks tenant runtime access when the
 manifest declares `licensing.required=true` and no selected active license
 exists.
+
+Installed app artifacts are Core-owned runtime state. Admins can manually
+refresh an installed app artifact from the app management UI; Core fetches the
+current manifest and UI plugin artifact from the app base URL, verifies the
+manifest still belongs to the installed `app_id`, stores the artifact, and
+continues exposing it through a Core-owned `ui_url`.
+
+Apps may contribute procedural Help entries through
+`integration.ui.help_entries`. Help entries are not feature links first; they
+are goal-oriented guides with steps, an expected outcome, and an optional link
+to the place in the UI where the operator performs the action. The web shell
+groups Help by section in the top-level Help dropdown.
 
 ## Licensing
 

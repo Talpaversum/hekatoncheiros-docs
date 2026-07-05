@@ -11,7 +11,7 @@ The frontend (TypeScript/React) provides a unified UI for managing **Hekatonchei
 ## High-level overview
 
 - **App Shell**: layout, routing, navigation, theming
-- **Core Console**: kernel pages (tenants, users, access, apps, licensing)
+- **Core Console**: kernel pages (tenants, users, access, apps, licensing, help)
 - **UI Kit**: shared components (buttons, forms, tables)
 - **Data Layer**: API client, caching, auth
 
@@ -115,6 +115,15 @@ load them dynamically from core-provided `ui_url` values.
 
 - `POST /api/v1/audit/record`
 
+#### 8) Help
+
+- top-level **Help** dropdown, structurally similar to the Apps dropdown
+- section routes such as `/core/help/aplikace` and `/core/help/inventory`
+- procedural guides rendered as disclosure/accordion rows
+- app-provided guides sourced from manifest `integration.ui.help_entries`
+- guide visibility follows the same registry visibility, license, and privilege
+  checks as app navigation
+
 ### Base UI layout
 
 The shell layout is stable, but **navigation content is context-driven**.
@@ -123,12 +132,12 @@ The shell layout is stable, but **navigation content is context-driven**.
   - `/core/*` and `/admin/*` use static section configs (Dashboard, Apps, Licensing, Admin, ...)
   - `/app/:appId/*` uses **app registry** `nav_entries` for the active app
 - **TopBar** provides global navigation + dropdowns:
-  - left: Dashboard, Apps dropdown (registry + app entries), Licensing
+  - left: Dashboard, Apps dropdown (registry + app entries), Licensing, Help dropdown
   - right: messaging icon, Settings dropdown (theme toggle), User dropdown (logout)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ TopBar: Dashboard | Apps ▾ | Licensing | Settings ▾ | User ▾ │
+│ TopBar: Dashboard | Apps ▾ | Licensing | Help ▾ | Settings ▾ | User ▾ │
 ├──────────────────┬───────────────────────────────────────────┤
 │ SidebarNav (ctx) │ Page content                              │
 │ - core/admin OR  │ - SectionHeader                           │

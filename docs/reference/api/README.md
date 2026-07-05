@@ -31,6 +31,7 @@ authoritative specification lives in the OpenAPI file:
   - source: globally installed apps (`core.installed_apps`)
   - visibility filter: `installed ∩ resolved entitlement for tenant ∩ privilege checks`
   - intended use: Apps dropdown / runtime discovery in web shell
+  - includes filtered `nav_entries` and optional procedural `help_entries`
 
 - `GET /api/v1/apps/installed`
   - source: all globally installed apps (`core.installed_apps`)
@@ -38,6 +39,14 @@ authoritative specification lives in the OpenAPI file:
     - `resolved_entitlement`
     - `has_any_entitlement`
   - intended use: Manage apps (`/admin/apps`)
+  - access: platform app management privilege required
+
+- `POST /api/v1/apps/installed/{app_id}/refresh-artifact`
+  - admin action for refreshing an already installed app
+  - Core fetches the current manifest from the installed app `base_url`
+  - Core rejects the refresh if the fetched manifest `app_id` differs
+  - Core downloads and stores the current UI plugin artifact and updates runtime
+    metadata
   - access: platform app management privilege required
 
 - `GET /api/v1/apps/:slug/entitlement`
