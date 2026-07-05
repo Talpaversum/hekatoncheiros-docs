@@ -464,6 +464,43 @@ paths:
         "403":
           $ref: "#/components/responses/Forbidden"
 
+  /apps/catalog/entries/{app_id}/refresh-from-installed:
+    post:
+      tags: [Apps]
+      summary: Refresh or create a catalog entry from the installed app base URL.
+      operationId: refreshCatalogEntryFromInstalled
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      parameters:
+        - name: app_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: URL-encoded installed app id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+      responses:
+        "200":
+          description: Catalog entry refreshed from installed app
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
   /apps/catalog/sources:
     get:
       tags: [Apps]

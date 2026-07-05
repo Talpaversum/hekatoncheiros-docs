@@ -63,6 +63,13 @@ authoritative specification lives in the OpenAPI file:
     does not yet have a stored baseline manifest hash
   - access: platform app management privilege required
 
+- `POST /api/v1/apps/catalog/entries/{app_id}/refresh-from-installed`
+  - admin action for refreshing or creating a catalog entry from an installed
+    app's current `base_url`
+  - Core fetches the installed app manifest and rejects mismatched `app_id`
+  - existing catalog source/trust/summary/deployment metadata is preserved
+  - access: platform app management privilege required
+
 - `GET /api/v1/apps/:slug/entitlement`
   - returns resolved entitlement for runtime (`tier`, `limits`, validity window, source)
   - `204` if no resolved entitlement
