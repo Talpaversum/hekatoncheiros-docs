@@ -38,6 +38,10 @@ authoritative specification lives in the OpenAPI file:
   - includes tenant-scoped fields:
     - `resolved_entitlement`
     - `has_any_entitlement`
+  - includes optional `catalog_update` when the local catalog has a matching
+    `app_id`; this is a passive signal and does not mutate runtime state
+  - `catalog_update.state` distinguishes `available`, `same`, `stale`, and
+    `baseline_missing`
   - intended use: Manage apps (`/admin/apps`)
   - access: platform app management privilege required
 

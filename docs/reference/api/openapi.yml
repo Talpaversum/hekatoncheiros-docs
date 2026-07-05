@@ -278,7 +278,7 @@ paths:
         - "platform.apps.manage"
       responses:
         "200":
-          description: Installed app list
+          description: Installed app list with entitlement and optional catalog_update state
 
   /apps/installed/{app_id}/refresh-artifact:
     post:
