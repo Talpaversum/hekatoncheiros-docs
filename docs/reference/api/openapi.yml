@@ -331,6 +331,55 @@ paths:
         "409":
           $ref: "#/components/responses/Conflict"
 
+  /apps/installed/{app_id}/app-token:
+    post:
+      tags: [Apps]
+      summary: Issue a short-lived app runtime token for an installed app.
+      operationId: issueInstalledAppToken
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      parameters:
+        - name: app_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: URL-encoded installed app id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+      responses:
+        "200":
+          description: Short-lived app runtime token issued
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [app_id, token_type, access_token, expires_at]
+                properties:
+                  app_id:
+                    type: string
+                  token_type:
+                    type: string
+                    enum: [Bearer]
+                  access_token:
+                    type: string
+                  expires_at:
+                    type: string
+                    format: date-time
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
   /apps/installed/{app_id}/check-update:
     post:
       tags: [Apps]
@@ -410,6 +459,174 @@ paths:
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+
+  /apps/installed/update-signal:
+    post:
+      tags: [Apps]
+      summary: Report an installed app update signal using app identity.
+      operationId: reportInstalledAppUpdateSignal
+      security:
+        - bearerAuthApp: []
+      x-required-privileges: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                app_version:
+                  type: string
+                manifest_hash:
+                  type: string
+                  pattern: "^[a-fA-F0-9]{64}$"
+                manifest_url:
+                  type: string
+                  format: uri
+                note:
+                  type: string
+                  maxLength: 500
+      responses:
+        "200":
+          description: Update signal recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [app_id, source, reported_at]
+                properties:
+                  app_id:
+                    type: string
+                  source:
+                    type: string
+                    enum: [app, feed, manual]
+                  app_version:
+                    type: string
+                    nullable: true
+                  manifest_hash:
+                    type: string
+                    nullable: true
+                  manifest_url:
+                    type: string
+                    format: uri
+                    nullable: true
+                  note:
+                    type: string
+                    nullable: true
+                  reported_at:
+                    type: string
+                    format: date-time
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /apps/installed/{app_id}/update-signal:
+    post:
+      tags: [Apps]
+      summary: Manually record an update signal for an installed app.
+      operationId: recordInstalledAppUpdateSignal
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      parameters:
+        - name: app_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: URL-encoded installed app id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                source:
+                  type: string
+                  enum: [app, feed, manual]
+                  default: app
+                app_version:
+                  type: string
+                manifest_hash:
+                  type: string
+                  pattern: "^[a-fA-F0-9]{64}$"
+                manifest_url:
+                  type: string
+                  format: uri
+                note:
+                  type: string
+                  maxLength: 500
+      responses:
+        "200":
+          description: Update signal recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [app_id, source, reported_at]
+                properties:
+                  app_id:
+                    type: string
+                  source:
+                    type: string
+                    enum: [app, feed, manual]
+                  app_version:
+                    type: string
+                    nullable: true
+                  manifest_hash:
+                    type: string
+                    nullable: true
+                  manifest_url:
+                    type: string
+                    format: uri
+                    nullable: true
+                  note:
+                    type: string
+                    nullable: true
+                  reported_at:
+                    type: string
+                    format: date-time
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Apps]
+      summary: Clear an active update signal for an installed app.
+      operationId: clearInstalledAppUpdateSignal
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      parameters:
+        - name: app_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: URL-encoded installed app id.
+      responses:
+        "204":
+          description: Update signal cleared
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /apps/catalog:
     get:
