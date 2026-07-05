@@ -63,7 +63,9 @@
     je hotový,
   - ruční admin akce `Refresh catalog` pro obnovení katalogového záznamu z
     nainstalované aplikace je hotová,
-  - notifikace z aplikace nebo feedu, že manifest/UI artefakt má novou verzi,
+  - uložený `update_signal` pro hlášení nové verze manifestu/UI artefaktu z
+    aplikace nebo feed vrstvy je hotový v admin-gated MVP podobě,
+  - doplnit podepsaný app/feed webhook pro `update_signal` bez admin session,
   - volitelný automatický refresh pro trusted/official zdroje,
   - audit a policy guard pro automatické změny runtime UI.
 - Vývojové deploymenty držet na HTTP; HTTPS doplnit později přes proxy nebo
