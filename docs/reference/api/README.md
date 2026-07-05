@@ -42,7 +42,35 @@ authoritative specification lives in the OpenAPI file:
     `app_id`; this is a passive signal and does not mutate runtime state
   - `catalog_update.state` distinguishes `available`, `same`, `stale`, and
     `baseline_missing`
+  - includes optional `update_signal` when an app, feed layer, or admin has
+    reported that a newer manifest/UI artifact may be available
   - intended use: Manage apps (`/admin/apps`)
+  - access: platform app management privilege required
+
+- `POST /api/v1/apps/installed/{app_id}/app-token`
+  - admin action for issuing a short-lived app runtime JWT
+  - token audience is the app API audience and the token contains `app_id`,
+    `tenant_id`, and `purpose=core-api`
+  - intended for development and manual operational flows until Core-managed
+    runtime token delivery is implemented
+  - access: platform app management privilege required
+
+- `POST /api/v1/apps/installed/update-signal`
+  - app-auth action for reporting that the calling installed app has a newer
+    manifest/UI artifact available
+  - Core takes `app_id` from the app JWT, not from request body or URL
+  - stores `source=app` and does not mutate runtime state
+  - intended follow-up action: admin reviews the signal and runs
+    `refresh-artifact` or clears the signal
+
+- `POST /api/v1/apps/installed/{app_id}/update-signal`
+  - admin action for manually recording an update signal for an installed app
+  - supports `source=app|feed|manual`
+  - access: platform app management privilege required
+
+- `DELETE /api/v1/apps/installed/{app_id}/update-signal`
+  - admin action for clearing an active update signal without changing runtime
+    state
   - access: platform app management privilege required
 
 - `POST /api/v1/apps/installed/{app_id}/refresh-artifact`
@@ -51,6 +79,7 @@ authoritative specification lives in the OpenAPI file:
   - Core rejects the refresh if the fetched manifest `app_id` differs
   - Core downloads and stores the current UI plugin artifact and updates runtime
     metadata
+  - clears any active `update_signal` for the app after a successful refresh
   - access: platform app management privilege required
 
 - `POST /api/v1/apps/installed/{app_id}/check-update`

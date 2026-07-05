@@ -99,6 +99,14 @@ current manifest and UI plugin artifact from the app base URL, verifies the
 manifest still belongs to the installed `app_id`, stores the artifact, and
 continues exposing it through a Core-owned `ui_url`.
 
+Installed apps can also report a non-mutating `update_signal` through an app
+runtime JWT. The signal tells Core and admins that a newer manifest or UI
+artifact may be available. Core does not automatically replace runtime
+artifacts from that signal; an admin reviews it and chooses whether to refresh
+the artifact or clear the signal. Until Core-managed runtime token delivery is
+implemented, admins can issue a short-lived app token from Apps / Installed
+apps for development and manual operational flows.
+
 Apps may contribute procedural Help entries through
 `integration.ui.help_entries`. Help entries are not feature links first; they
 are goal-oriented guides with steps, an expected outcome, and an optional link
