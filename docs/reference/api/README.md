@@ -49,6 +49,16 @@ authoritative specification lives in the OpenAPI file:
     metadata
   - access: platform app management privilege required
 
+- `POST /api/v1/apps/installed/{app_id}/check-update`
+  - admin action for checking whether a refreshed manifest/UI artifact is
+    available without mutating runtime state
+  - Core fetches the current manifest from the installed app `base_url`
+  - Core compares the fetched manifest hash with the stored installed manifest
+    hash
+  - returns `update_available=true|false|null`; `null` means the installed app
+    does not yet have a stored baseline manifest hash
+  - access: platform app management privilege required
+
 - `GET /api/v1/apps/:slug/entitlement`
   - returns resolved entitlement for runtime (`tier`, `limits`, validity window, source)
   - `204` if no resolved entitlement

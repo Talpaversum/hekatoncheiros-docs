@@ -55,6 +55,8 @@
 - Rozšířit lifecycle pro aplikační artefakty:
   - ruční admin akce `Refresh artifact` v managementu nainstalovaných aplikací
     je hotová,
+  - ruční admin akce `Check update` pro porovnání aktuálního manifest hashe s
+    uloženou instalací je hotová,
   - notifikace z aplikace nebo feedu, že manifest/UI artefakt má novou verzi,
   - volitelný automatický refresh pro trusted/official zdroje,
   - audit a policy guard pro automatické změny runtime UI.

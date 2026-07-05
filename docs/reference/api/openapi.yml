@@ -331,6 +331,86 @@ paths:
         "409":
           $ref: "#/components/responses/Conflict"
 
+  /apps/installed/{app_id}/check-update:
+    post:
+      tags: [Apps]
+      summary: Check whether an installed app has a newer manifest available.
+      operationId: checkInstalledAppUpdate
+      security:
+        - bearerAuthUser: []
+      x-required-privileges:
+        - "platform.apps.manage"
+      parameters:
+        - name: app_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: URL-encoded installed app id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+      responses:
+        "200":
+          description: Update check result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [app_id, checked_at, update_available, installed, fetched]
+                properties:
+                  app_id:
+                    type: string
+                  checked_at:
+                    type: string
+                    format: date-time
+                  update_available:
+                    type: boolean
+                    nullable: true
+                    description: Null means the installed record has no stored baseline manifest hash.
+                  installed:
+                    type: object
+                    required: [app_version, manifest_hash, fetched_at]
+                    properties:
+                      app_version:
+                        type: string
+                        nullable: true
+                      manifest_hash:
+                        type: string
+                        nullable: true
+                      fetched_at:
+                        type: string
+                        format: date-time
+                        nullable: true
+                  fetched:
+                    type: object
+                    required: [app_version, manifest_hash, fetched_at, fetched_from_url]
+                    properties:
+                      app_version:
+                        type: string
+                      manifest_hash:
+                        type: string
+                      fetched_at:
+                        type: string
+                        format: date-time
+                      fetched_from_url:
+                        type: string
+                        format: uri
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
   /apps/catalog:
     get:
       tags: [Apps]
