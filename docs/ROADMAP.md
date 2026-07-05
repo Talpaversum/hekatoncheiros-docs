@@ -65,7 +65,10 @@
     nainstalované aplikace je hotová,
   - uložený `update_signal` pro hlášení nové verze manifestu/UI artefaktu z
     aplikace nebo feed vrstvy je hotový v admin-gated MVP podobě,
-  - doplnit podepsaný app/feed webhook pro `update_signal` bez admin session,
+  - app-auth webhook `POST /api/v1/apps/installed/update-signal` pro
+    `update_signal` bez admin session je hotový,
+  - doplnit feed/author podepsané update signály pro zdroje mimo instalovanou
+    app runtime identitu,
   - volitelný automatický refresh pro trusted/official zdroje,
   - audit a policy guard pro automatické změny runtime UI.
 - Vývojové deploymenty držet na HTTP; HTTPS doplnit později přes proxy nebo
