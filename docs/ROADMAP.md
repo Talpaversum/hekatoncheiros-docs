@@ -49,9 +49,34 @@
     hranice a lifecycle stav pro standalone aplikace.
 - Zatím nepoužívat Docker Hub ani jiný public image registry; vývojové
   instalace mohou image buildovat lokálně při instalaci.
-- Navrhnout a implementovat Core runtime manager pro aplikační compose balíčky:
-  bezpečné umístění compose souborů, allowlist publish/volume/network pravidel,
-  auditované schválení adminem a lifecycle start/stop/update.
+- Core runtime manager pro aplikační compose balíčky:
+  - hotovo v Core:
+    - validovaný deployment plán (`deployment.package_url`,
+      `deployment.package_sha256`, `compose_file`, `service_name`,
+      `internal_base_url`),
+    - stažení runtime balíčku přes `stage_only + stage_package`,
+    - ověření SHA-256 a bezpečné rozbalení `tar.gz` balíčku,
+    - odmítnutí unsafe cest, symlinků, hardlinků a jiných než běžných
+      souborů/adresářů,
+    - základní compose policy guard: žádné published ports, host mounty,
+      `privileged`, `cap_add`, `network_mode`, `container_name`, host `pid/ipc`,
+    - opt-in Docker Compose adapter přes `APP_RUNTIME_DOCKER_ENABLED=true`.
+  - další krok:
+    - připravit první reálný runtime package pro `hc-app-inventory`,
+    - balíček má obsahovat minimálně `docker-compose.app.yml`,
+    - compose soubor musí projít policy guardem a nesmí publikovat porty ani
+      používat host mounty,
+    - vystavit balíček lokálně a spočítat `package_sha256`,
+    - doplnit katalogový `deployment` záznam pro Inventory:
+      `type=compose`, `package_url`, `package_sha256`, `compose_file`,
+      `service_name=inventory`, `internal_base_url=http://inventory:4010`,
+    - ověřit nejdřív `stage_only + stage_package=true`,
+    - potom zapnout `APP_RUNTIME_DOCKER_ENABLED=true` a otestovat plný
+      `mode=compose`,
+    - doladit síť mezi Core compose stackem a app compose stackem,
+      předání `INSTALLER_TOKEN_SECRET`, DB credentials a manifest/artifact
+      dostupnost z Core runtime.
+  - zbývá navrhnout auditované admin schválení a lifecycle stop/update/remove.
 - Rozšířit lifecycle pro aplikační artefakty:
   - ruční admin akce `Refresh artifact` v managementu nainstalovaných aplikací
     je hotová,
