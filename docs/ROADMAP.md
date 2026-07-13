@@ -60,23 +60,21 @@
       souborů/adresářů,
     - základní compose policy guard: žádné published ports, host mounty,
       `privileged`, `cap_add`, `network_mode`, `container_name`, host `pid/ipc`,
-    - opt-in Docker Compose adapter přes `APP_RUNTIME_DOCKER_ENABLED=true`.
-  - další krok:
-    - připravit první reálný runtime package pro `hc-app-inventory`,
-    - balíček má obsahovat minimálně `docker-compose.app.yml`,
-    - compose soubor musí projít policy guardem a nesmí publikovat porty ani
-      používat host mounty,
-    - vystavit balíček lokálně a spočítat `package_sha256`,
-    - doplnit katalogový `deployment` záznam pro Inventory:
+    - opt-in Docker Compose adapter přes `APP_RUNTIME_DOCKER_ENABLED=true`,
+    - první reálný runtime package pro `hc-app-inventory` včetně
+      `docker-compose.app.yml`, zdrojů pro lokální build a SHA-256,
+    - lokální vývojový katalog a manifest dostupný ještě před spuštěním
+      aplikace,
+    - katalogový `deployment` záznam pro Inventory:
       `type=compose`, `package_url`, `package_sha256`, `compose_file`,
       `service_name=inventory`, `internal_base_url=http://inventory:4010`,
-    - ověřit nejdřív `stage_only + stage_package=true`,
-    - potom zapnout `APP_RUNTIME_DOCKER_ENABLED=true` a otestovat plný
-      `mode=compose`,
-    - doladit síť mezi Core compose stackem a app compose stackem,
-      předání `INSTALLER_TOKEN_SECRET`, DB credentials a manifest/artifact
-      dostupnost z Core runtime.
-  - zbývá navrhnout auditované admin schválení a lifecycle stop/update/remove.
+    - ověřený `stage_only + stage_package=true` i plný `mode=compose`,
+    - sdílená síť, předání `INSTALLER_TOKEN_SECRET`, DB credentials a
+      dostupnost manifestu z Core runtime,
+    - čekání na aplikační healthcheck před validací manifestu a dokončením
+      instalace.
+  - další krok: navrhnout auditované admin schválení a lifecycle
+    `stop/update/remove`.
 - Rozšířit lifecycle pro aplikační artefakty:
   - ruční admin akce `Refresh artifact` v managementu nainstalovaných aplikací
     je hotová,
