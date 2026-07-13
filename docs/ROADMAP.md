@@ -11,7 +11,7 @@
 - installation lifecycle
 - local application catalog entries
 - catalog feed data model
-- catalog install modes: external, stage-only, and planned Core-managed compose
+- catalog install modes: external, stage-only, and opt-in Core-managed compose
 - manual catalog feed source sync
 - public instance app feed export
 - admin publish/unpublish controls for installed apps
@@ -72,9 +72,11 @@
     - sdílená síť, předání `INSTALLER_TOKEN_SECRET`, DB credentials a
       dostupnost manifestu z Core runtime,
     - čekání na aplikační healthcheck před validací manifestu a dokončením
-      instalace.
+      instalace,
+    - perzistentní ownership Core-managed runtime a runtime-aware uninstall,
+      který před smazáním instalace odstraní vlastněné Compose kontejnery.
   - další krok: navrhnout auditované admin schválení a lifecycle
-    `stop/update/remove`.
+    `stop/update`.
 - Rozšířit lifecycle pro aplikační artefakty:
   - ruční admin akce `Refresh artifact` v managementu nainstalovaných aplikací
     je hotová,

@@ -40,8 +40,9 @@ Core supports these install modes conceptually:
 - `stage_only`: store/return the selected deployment plan without creating the
   runtime installation entry.
 - `compose`: Core-managed compose deployment. The catalog contract may describe
-  a compose file, service name, project name, and internal base URL, but the MVP
-  backend only returns an approval plan until the runtime manager is implemented.
+  a package URL and checksum, compose file, service name, project name, and
+  internal base URL. The MVP runtime is implemented; production approval and
+  lifecycle hardening remain follow-up work.
 
 The catalog entry stores `deployment_json` separately from the manifest. The
 manifest describes integration with Core; deployment metadata describes how this

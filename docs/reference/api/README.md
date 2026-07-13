@@ -44,8 +44,16 @@ authoritative specification lives in the OpenAPI file:
     `baseline_missing`
   - includes optional `update_signal` when an app, feed layer, or admin has
     reported that a newer manifest/UI artifact may be available
-  - intended use: Manage apps (`/admin/apps`)
+  - intended use: Manage apps (`/core/apps/installed`)
   - access: platform app management privilege required
+
+- `DELETE /api/v1/apps/installed/{app_id}`
+  - uninstalls the application from Core
+  - for a Core-owned Compose runtime, removes the recorded service containers
+    before deleting the installation and runtime ownership records
+  - external application processes are never stopped by Core
+  - access: platform app management privilege required; runtime management
+    privilege is additionally required for Core-owned Compose runtimes
 
 - `POST /api/v1/apps/installed/{app_id}/app-token`
   - admin action for issuing a short-lived app runtime JWT

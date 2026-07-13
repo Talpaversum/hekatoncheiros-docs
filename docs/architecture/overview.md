@@ -86,8 +86,8 @@ catalog creates or stages local runtime state:
 - `external`: Core stores the installed app and connects to an already running
   app base URL.
 - `stage_only`: Core records the selected plan without enabling runtime use.
-- `compose`: target mode where Core starts an app-owned compose bundle after
-  admin approval; currently planned, not fully implemented.
+- `compose`: Core validates an app-owned package and starts its Compose runtime
+  after admin approval; production hardening and lifecycle controls remain open.
 
 Licensing does not block installation. It blocks tenant runtime access when the
 manifest declares `licensing.required=true` and no selected active license
@@ -129,7 +129,7 @@ License expiry must be non-destructive.
 
 - final app migration authority for all installation modes
 - standalone app database ownership
-- Core-managed compose runtime manager and deployment policy
+- production hardening and lifecycle policy for Core-managed app runtimes
 - production installer flow
 - production packaging for Docker and Kubernetes
 - custom app hostnames and tenant resolution

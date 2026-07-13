@@ -27,6 +27,16 @@ Start here:
 
 These are sketches for now, not production runbooks.
 
+## Application runtime target
+
+- **Core-managed:** Core acquires a versioned application package from a stable
+  HTTPS catalog, validates it, starts it, and owns its runtime lifecycle.
+- **External:** the operator starts and manages the application independently;
+  Core only installs its integration from the running application's URL.
+
+The current local HTTP package server and build-on-install flow are development
+tools, not the production distribution model.
+
 ## Shared assumptions
 
 - One canonical HC entrypoint is preferred, for example `http://hc.example.com`.
