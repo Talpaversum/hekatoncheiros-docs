@@ -155,6 +155,14 @@ that feed item.
 For local development, HTTP feed URLs are allowed only when their origin is in
 Core's trusted origins list.
 
+Automatic synchronization is disabled by default. It requires both
+`APP_CATALOG_AUTO_REFRESH_ENABLED=true` on Core and
+`auto_refresh_enabled=true` on the individual catalog source. Per-source opt-in
+is accepted only for `verified` and `official` trust modes. The scheduler runs
+at `APP_CATALOG_AUTO_REFRESH_INTERVAL_SECONDS` (minimum 60 seconds), prevents
+overlapping runs, and isolates a failed source so other eligible feeds can
+still refresh.
+
 ## Namespace Trust
 
 `app_id` uses namespace format:

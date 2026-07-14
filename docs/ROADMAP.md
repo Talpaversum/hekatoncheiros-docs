@@ -59,7 +59,7 @@ Task status is marked consistently throughout this document:
 
 - [x] Add feed/author-signed update signals for sources outside the running
   application's identity.
-- [ ] Add optional automatic refresh for trusted/official sources.
+- [x] Add optional automatic refresh for trusted/official sources.
 - [ ] Add audit logging and policy guards for automatic runtime UI changes.
 - [ ] Add HTTPS through proxy or ingress termination.
 - [ ] Expand and verify bare-metal/VM and Kubernetes deployments.
