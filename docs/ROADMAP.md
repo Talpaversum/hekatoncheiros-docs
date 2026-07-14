@@ -66,6 +66,50 @@ Task status is marked consistently throughout this document:
 - [x] Integrate `hc-author-registry` into author onboarding: issue `author_id`
   and `author_cert_jws`, manage public keys, and publish JWKS/revocation data.
 
+## Cross-Cutting Platform Work
+
+### Localization
+
+Localization is platform-wide and must remain consistent across Core, the Web
+shell, and installable applications. The work is ordered so that applications
+do not implement incompatible resource or fallback conventions before the
+platform contract exists.
+
+#### Contract and Platform Foundation
+
+- [ ] Define the localization contract: translation-key naming, resource file
+  format, canonical locale identifiers, interpolation and placeholder rules,
+  fallback behavior, resource validation, and contract/resource versioning.
+- [ ] Implement the contract in Core and the Web application with required
+  support for `en`, `cs`, `sk`, `de`, `fr`, and `es`.
+- [ ] Use `en` as the platform default locale and the final fallback for every
+  platform-owned or application-owned translation lookup.
+- [ ] Add a per-user preferred display language within each HC instance,
+  including persistence, account API exposure, and Web-shell selection.
+
+#### Application Integration
+
+- [ ] Extend application manifests to declare supported locales, require every
+  application to support at least `en`, and identify the bundled translation
+  resources and their localization-contract version.
+- [ ] Resolve application translations using the user's selected locale when
+  the application declares support for it.
+- [ ] Fall back to `en` when an application does not support the selected
+  locale, and fall back per key when a selected-locale resource is incomplete.
+- [ ] Define installation and runtime handling for missing, invalid,
+  incomplete, incompatible, and outdated application translation resources,
+  including which conditions reject installation and which produce warnings.
+
+#### Quality and Developer Workflow
+
+- [ ] Add shared validation tooling for duplicate translation keys, missing
+  required English translations, unsupported or non-canonical locale
+  identifiers, and placeholder mismatches between locales.
+- [ ] Apply localization validation in Core/Web CI and during application
+  manifest or artifact validation where appropriate.
+- [ ] Document the localization contract, fallback resolution, versioning, and
+  translation workflow for Core, Web, and third-party application developers.
+
 ## Phase 2 - Core2Core Integration
 
 Core2Core is deferred and is not part of the current implementation scope.
