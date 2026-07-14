@@ -20,12 +20,13 @@ Start here:
 
 - [Docker deployment](./docker.md)
 
-## Planned deployment modes
+## Reference deployment modes
 
 - [Baremetal / VM](./baremetal.md)
 - [Kubernetes](./kubernetes.md)
 
-These are sketches for now, not production runbooks.
+These have reference configurations and validation steps, but are not yet
+packaged production installers or Helm releases.
 
 ## Application runtime target
 

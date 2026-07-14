@@ -62,7 +62,7 @@ Task status is marked consistently throughout this document:
 - [x] Add optional automatic refresh for trusted/official sources.
 - [x] Add audit logging and policy guards for automatic runtime UI changes.
 - [x] Add HTTPS through proxy or ingress termination.
-- [ ] Expand and verify bare-metal/VM and Kubernetes deployments.
+- [x] Expand and verify bare-metal/VM and Kubernetes deployments.
 - [ ] Integrate `hc-author-registry` into author onboarding: issue `author_id`
   and `author_cert_jws`, manage public keys, and publish JWKS/revocation data.
 
@@ -141,4 +141,5 @@ designed and approved.
   used yet.
 - Development deployments default to HTTP; optional Compose ingress termination
   provides HTTPS with operator-supplied certificates.
-- Bare-metal/VM and Kubernetes documentation remains a concise design outline.
+- Bare-metal/VM and Kubernetes have validated reference configurations; they
+  are not yet packaged installers or Helm releases.
