@@ -97,6 +97,43 @@ These items require design decisions rather than implementation alone.
   runtime package, UI plugin, and management of customers, grants, licenses, and
   revocations.
 
+### Application-Owned Mobile Clients
+
+- [ ] Define the client boundary. A mobile client is an optional presentation
+  channel for an installed application's backend, not a Core UI or a replacement
+  for the Core web shell. Decide whether HC supports web-only, web-and-mobile,
+  mobile-only, and future client combinations; mobile-only support would require
+  changing the current UI-artifact installation contract. Business logic must
+  remain owned by the application backend.
+- [ ] Define mobile authentication and instance/tenant discovery using
+  Core-owned identity, tenant, privilege, licensing, and application access
+  context. Specify client registration, login, token refresh and revocation,
+  logout, and selection of the correct HC instance and tenant.
+- [ ] Define mobile metadata in the application manifest: supported platforms,
+  bundle/package identifiers, store references, deep links, redirect URIs,
+  minimum client versions, and requested API scopes and permissions.
+- [ ] Decide whether mobile clients access application backends directly or
+  through Core-managed ingress. Every request must preserve identity, tenant,
+  privilege, licensing, and audit context without bypassing Core security
+  boundaries. Client-specific API façades may exist, but business rules and
+  authorization must remain centralized in the backend.
+- [ ] Define multi-client lifecycle and compatibility policy across the backend,
+  web UI plugin, and mobile clients, including updates, backward compatibility,
+  and minimum supported versions.
+- [ ] Define optional platform capabilities and their security contracts: push
+  notifications, deep links, device registration, offline synchronization,
+  background processing, and secure local storage.
+- [ ] Define tenant administration for mobile access, client-specific policies,
+  device revocation, remote logout, and audit of mobile authentication and
+  device activity.
+- [ ] Decide whether vendors distribute mobile clients independently or expose
+  trusted store metadata through the HC catalog, including the integrity and
+  publisher-verification model available on each platform.
+
+A mobile client must not become an alternative Core administration interface
+unless a dedicated Core administration API and security model are explicitly
+designed and approved.
+
 ## Current Deployment Principles
 
 - Docker Compose is the currently verified path for local self-hosting.
