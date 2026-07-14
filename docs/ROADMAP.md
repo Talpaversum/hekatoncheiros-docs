@@ -61,7 +61,7 @@ Task status is marked consistently throughout this document:
   application's identity.
 - [x] Add optional automatic refresh for trusted/official sources.
 - [x] Add audit logging and policy guards for automatic runtime UI changes.
-- [ ] Add HTTPS through proxy or ingress termination.
+- [x] Add HTTPS through proxy or ingress termination.
 - [ ] Expand and verify bare-metal/VM and Kubernetes deployments.
 - [ ] Integrate `hc-author-registry` into author onboarding: issue `author_id`
   and `author_cert_jws`, manage public keys, and publish JWKS/revocation data.
@@ -139,5 +139,6 @@ designed and approved.
 - Docker Compose is the currently verified path for local self-hosting.
 - Development installations build images locally; no public image registry is
   used yet.
-- Development deployments use HTTP.
+- Development deployments default to HTTP; optional Compose ingress termination
+  provides HTTPS with operator-supplied certificates.
 - Bare-metal/VM and Kubernetes documentation remains a concise design outline.

@@ -13,7 +13,7 @@ Use Docker Compose for local self-hosted testing:
 - PostgreSQL
 - `hekatoncheiros-core`
 - `hekatoncheiros-web`
-- HTTP only
+- HTTP by default, with optional HTTPS ingress termination
 - local image builds
 
 Start here:
@@ -39,11 +39,12 @@ tools, not the production distribution model.
 
 ## Shared assumptions
 
-- One canonical HC entrypoint is preferred, for example `http://hc.example.com`.
+- One canonical HC entrypoint is preferred, for example `https://hc.example.com`.
 - The web shell owns user-facing UI routing.
 - Core owns `/api/v1/*`, app lifecycle, and runtime UI plugin URLs.
 - App-specific hostnames, such as `inv.example.com`, are future work.
-- HTTPS will be added later through a reverse proxy or ingress.
+- Docker Compose can terminate HTTPS at the optional nginx ingress; certificate
+  acquisition and renewal remain deployment responsibilities.
 - Docker Hub or another public image registry is not used yet.
 
 ## Database placement
