@@ -57,7 +57,7 @@ Task status is marked consistently throughout this document:
 
 ### Later
 
-- [ ] Add feed/author-signed update signals for sources outside the running
+- [x] Add feed/author-signed update signals for sources outside the running
   application's identity.
 - [ ] Add optional automatic refresh for trusted/official sources.
 - [ ] Add audit logging and policy guards for automatic runtime UI changes.

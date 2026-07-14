@@ -103,6 +103,8 @@ Feed items describe app releases:
       "version": "0.1.0",
       "manifest_url": "https://apps.example/.well-known/hc-app-manifest.json",
       "manifest_sha256": "...",
+      "update_signal_jws": "eyJ...",
+      "author_cert_jws": "eyJ...",
       "author_id": "aut_...",
       "author_namespace": "talpaversum",
       "license_required": true,
@@ -139,6 +141,16 @@ MVP feed sync is operator-triggered:
    Core verifies it against the fetched manifest before upserting the entry.
 5. Imported entries use `source_type=feed`; `manual` feed trust maps to
    `trust_status=unverified` until author/release verification exists.
+
+An item may carry `update_signal_jws` together with `author_cert_jws`. Core
+verifies the author certificate against its configured registry root JWKS and
+then verifies the update signal with the author keys embedded in that
+certificate. The `hc-app-update` signal must bind `sub` (the author-scoped
+`app_id`), `app_version`, `manifest_sha256`, and `manifest_url` to the fetched
+manifest, and its validity may not exceed seven days. If the application is
+installed, the verified proof is persisted as a feed update signal. Supplying
+only one of the two JWS values, an expired proof, or mismatched claims rejects
+that feed item.
 
 For local development, HTTP feed URLs are allowed only when their origin is in
 Core's trusted origins list.
