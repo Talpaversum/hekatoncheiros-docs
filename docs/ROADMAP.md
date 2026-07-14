@@ -63,7 +63,7 @@ Task status is marked consistently throughout this document:
 - [x] Add audit logging and policy guards for automatic runtime UI changes.
 - [x] Add HTTPS through proxy or ingress termination.
 - [x] Expand and verify bare-metal/VM and Kubernetes deployments.
-- [ ] Integrate `hc-author-registry` into author onboarding: issue `author_id`
+- [x] Integrate `hc-author-registry` into author onboarding: issue `author_id`
   and `author_cert_jws`, manage public keys, and publish JWKS/revocation data.
 
 ## Phase 2 - Core2Core Integration

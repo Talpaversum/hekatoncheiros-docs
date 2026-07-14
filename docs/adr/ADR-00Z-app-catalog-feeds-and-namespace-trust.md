@@ -173,6 +173,19 @@ operations with their existing approval and audit requirements.
 
 ## Namespace Trust
 
+Core integrates with the private `hc-author-registry` for administrator-driven
+author onboarding. With `AUTHOR_REGISTRY_URL` and
+`AUTHOR_REGISTRY_ADMIN_TOKEN` configured, `platform.authors.manage` can create
+an author, register public-only JWKS, and issue the first root-signed
+`author_cert_jws` in one Core workflow. Key updates issue a replacement
+certificate, and Core can snapshot the registry's public root JWKS and
+revocation publication. Core stores the onboarding result and audit trail but
+never accepts or stores author private key parameters.
+
+Registry administration remains an explicit online operation. License and
+signed-update verification continue to use pinned or synchronized public trust
+material and must not require live registry access for normal application use.
+
 `app_id` uses namespace format:
 
 ```text
