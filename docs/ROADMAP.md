@@ -43,13 +43,13 @@ Task status is marked consistently throughout this document:
   stored `update_signal` data and catalog stale/update summaries
 - [x] App-auth update signal webhook and manual issuance of short-lived app
   runtime JWTs
+- [x] Audited administrator approval, bound to the deployment plan plus manifest
+  and package hashes, before starting a Core-managed runtime
 
 ## Active Work
 
 ### Next
 
-- [ ] Design audited administrator approval for starting a Core-managed
-  application.
 - [ ] Add `stop` and `update` lifecycle actions for Core-managed Compose
   runtimes.
 - [ ] Securely deliver and rotate app runtime tokens in Core-managed

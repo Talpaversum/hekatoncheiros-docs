@@ -107,6 +107,17 @@ authoritative specification lives in the OpenAPI file:
   - existing catalog source/trust/summary/deployment metadata is preserved
   - access: platform app management privilege required
 
+- `POST /api/v1/apps/catalog/entries/{app_id}/install`
+  - installs an external application, stages a deployment package, or starts a
+    Core-managed Compose runtime
+  - `mode=compose` requires runtime management privilege and an explicit
+    approval bound to the current deployment plan, manifest SHA-256, and package
+    SHA-256
+  - missing approval returns `409 runtime_approval_required`; changed approved
+    data returns `409 runtime_approval_stale`
+  - Core records `platform.apps.runtime.start.approved` before package staging
+    or runtime startup; an audit write failure aborts the operation
+
 - `GET /api/v1/apps/:slug/entitlement`
   - returns resolved entitlement for runtime (`tier`, `limits`, validity window, source)
   - `204` if no resolved entitlement

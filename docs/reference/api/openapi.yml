@@ -854,9 +854,51 @@ paths:
                   type: string
                   enum: [external, stage_only, compose]
                   default: external
+                stage_package:
+                  type: boolean
+                  default: false
+                approval:
+                  type: object
+                  description: Required when mode is compose.
+                  required:
+                    - confirmed
+                    - expected_manifest_sha256
+                    - expected_package_sha256
+                    - expected_deployment
+                  properties:
+                    confirmed:
+                      type: boolean
+                      enum: [true]
+                    expected_manifest_sha256:
+                      type: string
+                      pattern: "^[a-fA-F0-9]{64}$"
+                    expected_package_sha256:
+                      type: string
+                      pattern: "^[a-fA-F0-9]{64}$"
+                    expected_deployment:
+                      type: object
+                      required:
+                        - service_name
+                        - internal_base_url
+                        - package_url
+                        - compose_project
+                        - compose_file
+                      properties:
+                        service_name:
+                          type: string
+                        internal_base_url:
+                          type: string
+                          format: uri
+                        package_url:
+                          type: string
+                          format: uri
+                        compose_project:
+                          type: string
+                        compose_file:
+                          type: string
       responses:
         "201":
-          description: Installed via external mode
+          description: Installed via external or Core-managed Compose mode
         "202":
           description: Staged deployment plan
         "400":
@@ -868,9 +910,9 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
         "409":
-          description: Catalog manifest hash changed or app slug conflict
+          description: Approval missing/stale, catalog manifest changed, or app slug conflict
         "501":
-          description: Core-managed compose runtime is not implemented yet
+          description: Core-managed Compose runtime is disabled
 
   /apps/catalog/entries/{app_id}/publication:
     patch:

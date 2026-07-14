@@ -41,8 +41,8 @@ Core supports these install modes conceptually:
   runtime installation entry.
 - `compose`: Core-managed compose deployment. The catalog contract may describe
   a package URL and checksum, compose file, service name, project name, and
-  internal base URL. The MVP runtime is implemented; production approval and
-  lifecycle hardening remain follow-up work.
+  internal base URL. The MVP runtime and explicit administrator approval are
+  implemented; lifecycle hardening remains follow-up work.
 
 The catalog entry stores `deployment_json` separately from the manifest. The
 manifest describes integration with Core; deployment metadata describes how this
@@ -51,6 +51,13 @@ instance may run or reach the app.
 Core-managed compose must remain an operator/admin capability. It must not
 silently allow published ports or host mounts from a remote feed; those require
 explicit policy and approval.
+
+Starting a Core-managed runtime requires an explicit approval request bound to
+the deployment plan, manifest SHA-256, and package SHA-256 shown to the
+administrator. Core rejects missing or stale approvals before starting the
+service and records
+`platform.apps.runtime.start.approved` with the actor and deployment plan in the
+audit log. If the audit write fails, runtime startup does not proceed.
 
 ## Publishing To This Instance Feed
 

@@ -87,7 +87,8 @@ catalog creates or stages local runtime state:
   app base URL.
 - `stage_only`: Core records the selected plan without enabling runtime use.
 - `compose`: Core validates an app-owned package and starts its Compose runtime
-  after admin approval; production hardening and lifecycle controls remain open.
+  after hash-bound, audited admin approval; `stop` and `update` lifecycle
+  controls remain open.
 
 Licensing does not block installation. It blocks tenant runtime access when the
 manifest declares `licensing.required=true` and no selected active license
@@ -129,7 +130,7 @@ License expiry must be non-destructive.
 
 - final app migration authority for all installation modes
 - standalone app database ownership
-- production hardening and lifecycle policy for Core-managed app runtimes
+- `stop` and `update` lifecycle policy for Core-managed app runtimes
 - production installer flow
 - production packaging for Docker and Kubernetes
 - custom app hostnames and tenant resolution
