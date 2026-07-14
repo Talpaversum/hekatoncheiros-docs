@@ -1,43 +1,46 @@
-# Database Policy – Hekatoncheiros
+# Database Policy - Hekatoncheiros
 
 ## 1. Tenancy model
 
 - Default: DB-per-tenant.
-- V každé tenant DB existují:
-  - `core` schema
-  - `app_<app_id>` schema pro každou instalovanou aplikaci
+- Each tenant database contains:
+  - the `core` schema
+  - one `app_<app_id>` schema for each installed application
 
 ## 2. Provisioning
 
-- Databázi pro tenant vytváří core (ne aplikace).
-- Aplikace nikdy nesmí provádět `CREATE DATABASE`.
-- Core může běžet s elevated DB právy pro provisioning (kompromis pro UX).
+- Core creates tenant databases; applications do not.
+- Applications MUST NOT execute `CREATE DATABASE`.
+- Core may use elevated database privileges for provisioning as an operational
+  compromise that simplifies installation.
 
 ## 3. Schema-per-app
 
-- Každá aplikace vlastní jedno schema: `app_<app_id>`.
-- Žádná aplikace nemá přístup do jiného app schema ani do `core` schema.
+- Each application owns one schema: `app_<app_id>`.
+- An application cannot access another application's schema or the `core`
+  schema.
 
-## 4. Migrace
+## 4. Migrations
 
-- Migrace dodává aplikace přes endpointy:
+- The application provides migrations through these endpoints:
   - `GET /.well-known/hc/migrations`
   - `GET /.well-known/hc/migrations/{id}`
 - Core:
-  - stáhne migrace
-  - ověří SHA-256 hash každé migrace (MVP)
-  - aplikuje migrace do příslušného schema
-- Aplikace migrace nikdy nespouští sama proti DB.
+  - downloads the migrations
+  - verifies the SHA-256 hash of every migration (MVP)
+  - applies migrations to the corresponding application schema
+- Applications MUST NOT run migrations directly against the database.
 
 ## 5. Runtime DB Access
 
-- Core vytvoří DB roli pro aplikaci:
-  - přístup pouze do `app_<app_id>` schema
-- Aplikace obdrží DB credentials až po úspěšné instalaci.
+- Core creates a database role for the application with access limited to its
+  `app_<app_id>` schema.
+- The application receives database credentials only after successful
+  installation.
 
-## 6. Instalace aplikace – životní cyklus
+## 6. Application Installation Lifecycle
 
-Stavy:
+States:
 
 - `registered`
 - `installing`
@@ -46,21 +49,22 @@ Stavy:
 - `failed`
 - `disabled`
 
-Aplikace:
+Application behavior:
 
-- před `ready` musí odmítat business API
-- po `installation/complete` přechází do runtime režimu
+- Before reaching `ready`, the application must reject business API requests.
+- After `installation/complete`, the application enters runtime mode.
 
 ## 7. Remote Apps (future)
 
-- Core2Core integrace
-- žádná sdílená databáze
-- roadmap item
+- Core2Core integration
+- no shared database
+- tracked as a roadmap item
 
-## MVP poznámka
+## MVP Note
 
-V aktuálním MVP běží platforma nad jednou fyzickou PostgreSQL databází (logická tenancy), ale pravidla výše platí beze změny:
+The current MVP runs on one physical PostgreSQL database with logical tenancy,
+but the rules above still apply without modification:
 
-- schema-per-app,
-- core-managed migrace,
-- žádné `CREATE DATABASE` v aplikacích.
+- schema-per-app
+- Core-managed migrations
+- no `CREATE DATABASE` issued by applications

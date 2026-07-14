@@ -355,16 +355,16 @@ Example:
 
 ```json
 {
-  "title": "Vytvořit šablonu inventární položky",
-  "summary": "Postup pro vytvoření opakovaně použitelné šablony s tenant scope a vlastními atributy.",
-  "outcome": "Nová šablona bude dostupná při vytváření inventárních položek.",
+  "title": "Create an inventory item template",
+  "summary": "Create a reusable template with a tenant scope and custom attributes.",
+  "outcome": "The new template is available when creating inventory items.",
   "category": "Inventory",
   "steps": [
-    "Otevři Inventory / Typy atributů a připrav atributy, které chceš v šabloně používat.",
-    "Přejdi do Inventory / Šablony.",
-    "Vyplň název šablony a vyber tenant scope.",
-    "Klikni na plus u atributů a přidej pole, která má šablona obsahovat.",
-    "Označ povinná pole a šablonu ulož."
+    "Open Inventory / Attribute types and prepare the attributes used by the template.",
+    "Open Inventory / Templates.",
+    "Enter a template name and select its tenant scope.",
+    "Add the attributes that the template should contain.",
+    "Mark required fields and save the template."
   ],
   "path": "/app/inventory/templates",
   "required_privileges": ["inventory.read"]

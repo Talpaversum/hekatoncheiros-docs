@@ -1,118 +1,106 @@
 # Hekatoncheiros Roadmap
 
-## Phase 1 – Local Installable Apps
+Task status is marked consistently throughout this document:
 
-- DB-per-tenant model (v MVP logicky v jedné fyzické DB)
-- schema-per-app (`app_<app_id>`)
-- migration via core (`/.well-known/hc/migrations*`)
-- hash-verified migrations (SHA-256, MVP)
-- licensing enforcement for tenant runtime navigation/API access
-- signed manifests
-- installation lifecycle
-- local application catalog entries
-- catalog feed data model
-- catalog install modes: external, stage-only, and opt-in Core-managed compose
-- manual catalog feed source sync
-- public instance app feed export
-- admin publish/unpublish controls for installed apps
-- Core-owned UI plugin artifact storage and manual artifact refresh
-- Core Console management UI for catalog, installed apps, tenant/platform settings,
-  RBAC/user/tenant management, licensing activation, toast feedback, and Help
-  dropdown sections
-- manifest-provided procedural Help entries (`integration.ui.help_entries`)
+- `[x]` completed,
+- `[ ]` planned,
+- open design decisions are separated from implementation tasks.
 
-## Phase 2 – Core2Core Integration
+## Phase 1 - Local Installable Apps
 
-- remote apps
-- scheduled application catalog feed sync
-- "suggest app for feed" workflow with pending publication requests
-- admin-issued publish tokens for pre-approved namespaces/apps/CI pipelines
-- namespace trust / protected namespace policy
-- OAuth trust
-- no shared DB
-- signed cross-core tokens
-- signed migration bundles
+### Completed
 
-> Core2Core není v současném scope implementováno.
+- [x] DB-per-tenant model (logically separated within one physical database for
+  the MVP)
+- [x] Schema-per-app (`app_<app_id>`)
+- [x] Migrations through Core (`/.well-known/hc/migrations*`)
+- [x] SHA-256 migration verification
+- [x] License enforcement for tenant runtime navigation and API access
+- [x] Signed manifests
+- [x] Installation lifecycle
+- [x] Local application catalog and catalog feeds
+- [x] Installation modes: `external`, `stage_only`, and opt-in Core-managed
+  Compose
+- [x] Manual feed source synchronization and public instance feed export
+- [x] Publish/unpublish management for installed applications
+- [x] Core storage and manual refresh of UI plugin artifacts
+- [x] Core Console for applications, tenants, users, RBAC, licensing, and
+  configuration
+- [x] Help entries provided by application manifests
 
-## Deployment TODO
+### Completed Runtime Foundation
 
-- Udržet Docker Compose jako aktuální ověřitelnou cestu pro lokální self-host.
-- Baremetal / VM a Kubernetes zatím držet jen jako stručné skici.
-- Vyřešit konflikt aplikačních migrací a DB ownership modelu:
-  - Core-managed aplikace instalované z oficiálního zdroje nebo lokálního
-    balíčku může cílová HC instance validovat, sestavit, spustit a provozně
-    řídit.
-  - Standalone aplikace může být provozovaná mimo cílovou HC instanci, ale
-    zároveň má dodržet tenant/app DB model cílové instance.
-  - Je potřeba rozhodnout, kdo vlastní DB credentials, migrace, backup/restore
-    hranice a lifecycle stav pro standalone aplikace.
-- Zatím nepoužívat Docker Hub ani jiný public image registry; vývojové
-  instalace mohou image buildovat lokálně při instalaci.
-- Core runtime manager pro aplikační compose balíčky:
-  - hotovo v Core:
-    - validovaný deployment plán (`deployment.package_url`,
-      `deployment.package_sha256`, `compose_file`, `service_name`,
-      `internal_base_url`),
-    - stažení runtime balíčku přes `stage_only + stage_package`,
-    - ověření SHA-256 a bezpečné rozbalení `tar.gz` balíčku,
-    - odmítnutí unsafe cest, symlinků, hardlinků a jiných než běžných
-      souborů/adresářů,
-    - základní compose policy guard: žádné published ports, host mounty,
-      `privileged`, `cap_add`, `network_mode`, `container_name`, host `pid/ipc`,
-    - opt-in Docker Compose adapter přes `APP_RUNTIME_DOCKER_ENABLED=true`,
-    - první reálný runtime package pro `hc-app-inventory` včetně
-      `docker-compose.app.yml`, zdrojů pro lokální build a SHA-256,
-    - lokální vývojový katalog a manifest dostupný ještě před spuštěním
-      aplikace,
-    - katalogový `deployment` záznam pro Inventory:
-      `type=compose`, `package_url`, `package_sha256`, `compose_file`,
-      `service_name=inventory`, `internal_base_url=http://inventory:4010`,
-    - ověřený `stage_only + stage_package=true` i plný `mode=compose`,
-    - sdílená síť, předání `INSTALLER_TOKEN_SECRET`, DB credentials a
-      dostupnost manifestu z Core runtime,
-    - čekání na aplikační healthcheck před validací manifestu a dokončením
-      instalace,
-    - perzistentní ownership Core-managed runtime a runtime-aware uninstall,
-      který před smazáním instalace odstraní vlastněné Compose kontejnery.
-  - další krok: navrhnout auditované admin schválení a lifecycle
-    `stop/update`.
-- Rozšířit lifecycle pro aplikační artefakty:
-  - ruční admin akce `Refresh artifact` v managementu nainstalovaných aplikací
-    je hotová,
-  - ruční admin akce `Check update` pro porovnání aktuálního manifest hashe s
-    uloženou instalací je hotová,
-  - pasivní katalogový signál `catalog_update` v seznamu nainstalovaných aplikací
-    je hotový,
-  - souhrnný admin panel pro katalogové update/stale signály v Apps managementu
-    je hotový,
-  - ruční admin akce `Refresh catalog` pro obnovení katalogového záznamu z
-    nainstalované aplikace je hotová,
-  - uložený `update_signal` pro hlášení nové verze manifestu/UI artefaktu z
-    aplikace nebo feed vrstvy je hotový v admin-gated MVP podobě,
-  - app-auth webhook `POST /api/v1/apps/installed/update-signal` pro
-    `update_signal` bez admin session je hotový,
-  - ruční admin akce pro vydání krátkodobého app runtime JWT pro instalovanou
-    aplikaci je hotová,
-  - doplnit bezpečné předání/obnovu app runtime tokenu do Core-managed
-    aplikačního runtime bez ručního kopírování,
-  - doplnit feed/author podepsané update signály pro zdroje mimo instalovanou
-    app runtime identitu,
-  - volitelný automatický refresh pro trusted/official zdroje,
-  - audit a policy guard pro automatické změny runtime UI.
-- Vývojové deploymenty držet na HTTP; HTTPS doplnit později přes proxy nebo
-  ingress terminaci.
-- Zrevidovat dlouhodobou hranici `hc-author-registry`: zatím zůstává oddělené,
-  ale může dávat větší smysl jako volitelný authority mode v Core.
-- Zapojit `hc-author-registry` do licenčního author onboardingu:
-  - lokální dev flow nesmí dlouhodobě nahrazovat registry falešnou autoritou,
-  - registry má vydávat `author_id`, registrovat autorovy veřejné klíče,
-    vydávat `author_cert_jws` a publikovat root JWKS/revocation snapshoty,
-  - `hc-app-licensing` má používat certifikát vydaný registry místo ručně
-    generovaného dev certifikátu.
-- Rozhodnout produktovou hranici `hc-app-licensing`:
-  - dnes je to backend issuer bez UI a bez aplikačního manifestu,
-  - navrhnout, zda má zůstat samostatnou autor/vendor službou, nebo dostat
-    instalovatelný Hekatoncheiros app manifest a Core Console UI,
-  - pokud bude instalovatelná, doplnit manifest, compose balíček, UI plugin a
-    administraci zákazníků, grantů, vydaných licencí a revoke workflow.
+- [x] Deployment plan validation including `package_url`, SHA-256, Compose file,
+  service name, and internal URL
+- [x] Safe download and extraction of `tar.gz` packages with rejection of unsafe
+  paths, links, and unsupported file types
+- [x] Compose policy guard prohibiting published ports, host mounts, privileged
+  mode, additional capabilities, and host network/PID/IPC
+- [x] Opt-in Docker Compose adapter and a verified `hc-app-inventory` runtime
+  package with a shared network and health check
+- [x] Persistent ownership of Core-managed runtimes and runtime-aware uninstall
+- [x] Manual manifest, catalog, and UI artifact checks and refreshes, including
+  stored `update_signal` data and catalog stale/update summaries
+- [x] App-auth update signal webhook and manual issuance of short-lived app
+  runtime JWTs
+
+## Active Work
+
+### Next
+
+- [ ] Design audited administrator approval for starting a Core-managed
+  application.
+- [ ] Add `stop` and `update` lifecycle actions for Core-managed Compose
+  runtimes.
+- [ ] Securely deliver and rotate app runtime tokens in Core-managed
+  applications without manual copying.
+
+### Later
+
+- [ ] Add feed/author-signed update signals for sources outside the running
+  application's identity.
+- [ ] Add optional automatic refresh for trusted/official sources.
+- [ ] Add audit logging and policy guards for automatic runtime UI changes.
+- [ ] Add HTTPS through proxy or ingress termination.
+- [ ] Expand and verify bare-metal/VM and Kubernetes deployments.
+- [ ] Integrate `hc-author-registry` into author onboarding: issue `author_id`
+  and `author_cert_jws`, manage public keys, and publish JWKS/revocation data.
+
+## Phase 2 - Core2Core Integration
+
+Core2Core is deferred and is not part of the current implementation scope.
+
+- [ ] Remote applications
+- [ ] Scheduled catalog feed synchronization
+- [ ] `suggest app for feed` workflow with pending publication requests
+- [ ] Publish tokens for pre-approved namespaces, applications, and CI pipelines
+- [ ] Namespace trust and protected namespace policy
+- [ ] OAuth trust
+- [ ] Separate databases with no shared DB
+- [ ] Signed cross-core tokens
+- [ ] Signed migration bundles
+
+## Open Decisions
+
+These items require design decisions rather than implementation alone.
+
+- [ ] Resolve database ownership for standalone applications. Define ownership
+  of database credentials, migrations, backup/restore boundaries, and lifecycle
+  state when an application is not operated by the target HC instance but uses
+  its tenant/app database model.
+- [ ] Reconsider the `hc-author-registry` boundary: a standalone service or an
+  optional authority mode in Core.
+- [ ] Decide the product boundary of `hc-app-licensing`: a standalone
+  author/vendor service or an installable HC application with a manifest and
+  administration UI.
+- [ ] If `hc-app-licensing` becomes an installable application, add its manifest,
+  runtime package, UI plugin, and management of customers, grants, licenses, and
+  revocations.
+
+## Current Deployment Principles
+
+- Docker Compose is the currently verified path for local self-hosting.
+- Development installations build images locally; no public image registry is
+  used yet.
+- Development deployments use HTTP.
+- Bare-metal/VM and Kubernetes documentation remains a concise design outline.

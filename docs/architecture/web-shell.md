@@ -118,7 +118,7 @@ load them dynamically from core-provided `ui_url` values.
 #### 8) Help
 
 - top-level **Help** dropdown, structurally similar to the Apps dropdown
-- section routes such as `/core/help/aplikace` and `/core/help/inventory`
+- section routes such as `/core/help/applications` and `/core/help/inventory`
 - procedural guides rendered as disclosure/accordion rows
 - app-provided guides sourced from manifest `integration.ui.help_entries`
 - guide visibility follows the same registry visibility, license, and privilege
