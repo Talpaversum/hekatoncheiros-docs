@@ -52,7 +52,7 @@ Task status is marked consistently throughout this document:
 
 - [x] Add `stop` and `update` lifecycle actions for Core-managed Compose
   runtimes.
-- [ ] Securely deliver and rotate app runtime tokens in Core-managed
+- [x] Securely deliver and rotate app runtime tokens in Core-managed
   applications without manual copying.
 
 ### Later
