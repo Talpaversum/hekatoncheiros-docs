@@ -32,6 +32,8 @@ This index separates architecture, ADR decisions, guides, and reference material
 
 ## Guides
 
+- [Localization contract and workflow](./guides/localization.md)
+
 ### Platform operator
 
 - [Installer configuration](./guides/platform-operator/installer-configuration.md)

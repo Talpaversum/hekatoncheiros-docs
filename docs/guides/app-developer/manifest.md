@@ -25,6 +25,13 @@ The manifest declares:
 - licensing model
 - integration points (API, events, UI)
 - collaboration constraints
+- localization contract version, supported locales, and translation resources
+
+Localization metadata is mandatory. Every app supports `en`, uses it as its
+default and final fallback, and declares one `locales/<locale>.json` resource
+for every supported locale. See the
+[localization contract and workflow](../localization.md) for the schema,
+validation rules, and plugin runtime context.
 
 The Platform Kernel guarantees that:
 
