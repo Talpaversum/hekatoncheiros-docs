@@ -163,6 +163,14 @@ at `APP_CATALOG_AUTO_REFRESH_INTERVAL_SECONDS` (minimum 60 seconds), prevents
 overlapping runs, and isolates a failed source so other eligible feeds can
 still refresh.
 
+Every automatic source run records a platform audit event for success or
+failure, including the source trust mode, import result, and allowed effects.
+Changing a source's automatic-refresh opt-in is audited separately with the
+administrator identity. The enforced automatic effect policy is
+`catalog_metadata + update_signals` only. It explicitly rejects installed UI
+artifact replacement and runtime mutation; those remain administrator-driven
+operations with their existing approval and audit requirements.
+
 ## Namespace Trust
 
 `app_id` uses namespace format:

@@ -60,7 +60,7 @@ Task status is marked consistently throughout this document:
 - [x] Add feed/author-signed update signals for sources outside the running
   application's identity.
 - [x] Add optional automatic refresh for trusted/official sources.
-- [ ] Add audit logging and policy guards for automatic runtime UI changes.
+- [x] Add audit logging and policy guards for automatic runtime UI changes.
 - [ ] Add HTTPS through proxy or ingress termination.
 - [ ] Expand and verify bare-metal/VM and Kubernetes deployments.
 - [ ] Integrate `hc-author-registry` into author onboarding: issue `author_id`
