@@ -59,9 +59,13 @@ resource, and correlation ID. Results are ordered by `occurred_at DESC, id DESC`
 The opaque cursor contains both fields, preventing duplicates or omissions when
 events share a timestamp. Responses use `{ items, next_cursor }`.
 
-The Web Audit log page stores filters in its query string, supports multi-select
-application/user/tenant filters, hides tenant selection outside platform scope,
-and renders sanitized metadata in the detail drawer.
+The Web Audit log page stores relative or absolute time ranges and active
+filters in its query string. A compact filter builder uses searchable,
+keyboard-accessible multi-select chips instead of native multi-select fields.
+Application and tenant display names are primary while technical IDs remain
+secondary. The responsive event table opens a structured Summary, Actor,
+Target, Request, and Metadata drawer; raw JSON is an optional technical view.
+Tenant selection remains hidden outside platform scope.
 
 ## Application writes
 
