@@ -38,6 +38,30 @@ locale is the requested locale when declared by the application, otherwise
 Changing the language in Account settings persists the preference through
 Core and updates the current Web session immediately.
 
+## Web translation sources
+
+Platform-owned translations live in `hekatoncheiros-web/src/localization`.
+`locales/en.ts` defines the canonical platform key set and `locales/cs.ts`
+provides its complete Czech translation. TypeScript checks both dictionaries
+against the same keys. The other locale files contain partial overrides and
+use English per-key fallback in `resources.ts`.
+
+Larger feature dictionaries may remain in focused modules such as
+`apps-resources.ts` and `config-resources.ts`; the locale files compose them
+into the final dictionary. `resources.ts` is only the locale registry and
+fallback policy, not a place for translation text.
+
+When adding a platform string:
+
+1. Add the English key and value.
+2. Add the matching Czech value; the Web build fails when it is missing.
+3. Add translations to partial locale files when available.
+4. Render the string through the localization API instead of a visible literal.
+5. Run the Web build and lint checks.
+
+These TypeScript sources are an internal Web implementation detail. Packaged
+applications still use the JSON resources defined by this contract.
+
 ## Application manifest
 
 ```json
