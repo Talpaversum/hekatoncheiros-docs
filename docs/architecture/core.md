@@ -67,10 +67,11 @@ Detailed target architecture and contracts:
 
 ## core.audit
 
-- Audit event recording
+- Structured, backward-compatible audit event recording
 - Tamper-evident strategy (at minimum: append-only, signed hashes optional)
-- Query/report endpoints
+- Tenant-safe query/report endpoints with cursor pagination
 - “actor metadata” injection (impersonation/delegation/license state)
+- See [AAA accounting and audit log](./audit-log.md).
 
 ## core.messaging
 

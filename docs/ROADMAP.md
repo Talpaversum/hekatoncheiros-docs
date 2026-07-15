@@ -73,6 +73,19 @@ Task status is marked consistently throughout this document:
 - [x] Separate User, Tenant, and Platform settings with privilege-aware
   Administration navigation while retaining contextual sidebars and
   application-provided `nav_entries`.
+
+### AAA Accounting and Audit Log
+
+- [x] Extend the existing `core.audit_log` and backward-compatible
+  `recordAudit` with structured events, sanitization, request correlation,
+  scope, visibility, actor/application identity, and query indexes.
+- [x] Add own, tenant, and platform read privileges with backend-enforced
+  tenant isolation, multi-value filters, filter options, detail lookup, and
+  stable cursor pagination.
+- [x] Add the localized Core Console Audit log with URL-persisted filters and a
+  structured detail drawer; keep technical event identifiers language-neutral.
+- [x] Add explicit batched retention maintenance and a non-blocking Inventory
+  reference client using the existing Core app runtime token.
 - [x] Add a compact operational Dashboard with live and explicitly planned
   widgets based on currently available APIs.
 - [x] Separate tenant license activation, offline import, entitlement review,

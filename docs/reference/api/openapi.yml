@@ -1147,7 +1147,7 @@ paths:
         - bearerAuthApp: []
         - bearerAuthUser: []
       x-required-privileges:
-        - "core.audit.append" # for user-auth; app-auth bypasses user privilege by definition
+        - "core.audit.append"
       requestBody:
         required: true
         content:
@@ -1163,6 +1163,64 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+
+  /audit/events:
+    post:
+      tags: [Audit]
+      summary: Append a structured audit event.
+      operationId: appendAuditEvent
+      security: [{ bearerAuthApp: [] }, { bearerAuthUser: [] }]
+      x-required-privileges: ["core.audit.append"]
+      responses:
+        "204": { description: Recorded }
+        "400": { description: Invalid event }
+        "401": { description: Unauthorized }
+        "403": { description: Scope or visibility denied }
+    get:
+      tags: [Audit]
+      summary: List authorized audit events using cursor pagination.
+      operationId: listAuditEvents
+      security: [{ bearerAuthUser: [] }]
+      parameters:
+        - { in: query, name: from, schema: { type: string, format: date-time } }
+        - { in: query, name: to, schema: { type: string, format: date-time } }
+        - { in: query, name: tenant_id, description: Comma-separated values, schema: { type: string } }
+        - { in: query, name: user_id, description: Comma-separated values, schema: { type: string } }
+        - { in: query, name: application_id, description: Comma-separated values, schema: { type: string } }
+        - { in: query, name: event_type, description: Comma-separated values, schema: { type: string } }
+        - { in: query, name: category, description: Comma-separated values, schema: { type: string } }
+        - { in: query, name: severity, description: Comma-separated values, schema: { type: string } }
+        - { in: query, name: outcome, description: Comma-separated values, schema: { type: string } }
+        - { in: query, name: scope, description: Comma-separated values, schema: { type: string } }
+        - { in: query, name: resource_type, schema: { type: string } }
+        - { in: query, name: resource_id, schema: { type: string } }
+        - { in: query, name: correlation_id, schema: { type: string } }
+        - { in: query, name: cursor, schema: { type: string } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 200, default: 50 } }
+      responses:
+        "200": { description: Authorized events and next_cursor }
+        "403": { description: Forbidden }
+
+  /audit/events/{id}:
+    get:
+      tags: [Audit]
+      summary: Return one authorized audit event.
+      operationId: getAuditEvent
+      security: [{ bearerAuthUser: [] }]
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Audit event }
+        "404": { description: Missing or not visible }
+
+  /audit/filter-options:
+    get:
+      tags: [Audit]
+      summary: Return filter values visible to the current reader.
+      operationId: getAuditFilterOptions
+      security: [{ bearerAuthUser: [] }]
+      responses:
+        "200": { description: Authorized tenants, users, applications, categories, event types, severities and outcomes }
 
 components:
   securitySchemes:

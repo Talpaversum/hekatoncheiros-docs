@@ -57,8 +57,13 @@ This is the “v0” schema set that supports your contract. Names are illustrat
 
 ## Audit
 
-- `audit_log`: tenant_id, actor_user_id, effective_user_id, action, object_ref, metadata JSON, created_at
-- Include delegation/impersonation flags
+- `audit_log`: UUID id; occurred/received timestamps; nullable platform
+  tenant_id; actor/effective user, actor type, application and source service;
+  scope and visibility; event type, category, action, outcome and severity;
+  resource identity; correlation/request/client metadata; message; sanitized
+  metadata JSON; schema version; legacy created_at and object_ref
+- Indexed for time/cursor, tenant, actor, effective user, application, event
+  type, and correlation queries
 
 ## Secrets
 

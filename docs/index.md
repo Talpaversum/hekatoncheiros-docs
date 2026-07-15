@@ -13,6 +13,7 @@ This index separates architecture, ADR decisions, guides, and reference material
 - [Overview](./architecture/overview.md)
 - [Core modules](./architecture/core.md)
 - [Web shell](./architecture/web-shell.md)
+- [AAA accounting and audit log](./architecture/audit-log.md)
 
 ## Licensing
 
