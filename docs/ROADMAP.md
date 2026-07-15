@@ -73,6 +73,10 @@ Task status is marked consistently throughout this document:
 - [x] Separate User, Tenant, and Platform settings with privilege-aware
   Administration navigation while retaining contextual sidebars and
   application-provided `nav_entries`.
+- [x] Separate application installation from runtime availability with
+  hysteretic health checks, safe registry status, proxy-level 503 blocking,
+  disabled Web navigation, direct-URL availability UI, polling, and a runtime
+  dashboard widget.
 
 ### AAA Accounting and Audit Log
 
