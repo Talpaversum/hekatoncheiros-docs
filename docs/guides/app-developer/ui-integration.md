@@ -29,6 +29,63 @@ The registration function returns:
 - navigation entries
 - optional widgets
 
+## Dashboard widget contract
+
+Applications may return `dashboard_widgets` from the same `register(appContext)`
+function used for routes and navigation. Core owns the dashboard layout; the
+application continues to own the widget component and its business logic.
+
+Each widget declares:
+
+- a globally stable `id` (use reverse-domain naming)
+- localized `title`, optional `description`, and `category`
+- `requiredPrivileges` and `supportedScopes`
+- `defaultVisible`, `defaultSize`, and `defaultPosition`
+- `presentation` (`kpi`, `summary`, or `list`) and the meaningful
+  `supportedSizes`
+- `defaultSettings` and a React `component`
+- optionally, a `settingsComponent` and `refresh` callback
+
+The component receives `{ settings }`. A settings component receives
+`{ value, onChange }`; Core renders it in a modal and persists the resulting
+settings with the user's dashboard preference. Applications must query data
+only inside their component and must use `appContext.api.request` so existing
+authentication and tenant isolation remain in effect.
+
+Example:
+
+```tsx
+return {
+  routes,
+  nav_entries,
+  dashboard_widgets: [{
+    id: "com.example.inventory.asset-summary",
+    title: labels.assetSummary,
+    category: labels.inventory,
+    requiredPrivileges: ["inventory.read"],
+    supportedScopes: ["tenant"],
+    defaultVisible: false,
+    defaultSize: "small",
+    supportedSizes: ["small", "medium"],
+    presentation: "summary",
+    defaultPosition: 1000,
+    defaultSettings: {},
+    component: AssetSummaryWidget,
+  }],
+};
+```
+
+Widget IDs and defaults form persisted configuration and should therefore be
+treated as a versioned public contract. New application widgets default to
+hidden for users who already customized their dashboard, preventing upgrades
+from unexpectedly changing an existing layout.
+
+Widget content must use its `size` prop, not only the card width. Compact KPI
+widgets should avoid fixed minimum heights; list widgets should increase the
+number and detail of rows for larger supported sizes. Every data-backed widget
+owns its loading, empty, and error UI, and hidden or unauthorized widgets are
+not mounted and therefore must not issue requests.
+
 ## Tokens (CSS custom properties)
 
 Primary tokens live in `hekatoncheiros-web/src/index.css` and map to Tailwind utilities via `@theme`:

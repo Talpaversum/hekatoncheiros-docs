@@ -88,6 +88,15 @@ Task status is marked consistently throughout this document:
   reference client using the existing Core app runtime token.
 - [x] Add a compact operational Dashboard with live and explicitly planned
   widgets based on currently available APIs.
+- [x] Replace the fixed dashboard with one permission-aware dashboard per
+  user, backed by generic user preferences, a shared widget registry,
+  automatic drag-and-drop persistence, inline widget settings, and Account
+  Dashboard administration.
+- [x] Publish the dashboard widget contract for installable applications and
+  validate it with an Inventory-owned summary widget.
+- [x] Make dashboard density content-aware with compact KPI cards, summary and
+  list presentations, per-widget supported sizes, isolated loading/error/empty
+  states, and size-dependent recent audit event lists.
 - [x] Separate tenant license activation, offline import, entitlement review,
   and active selection from app-scoped license binding.
 - [x] Define the author-operated Issuer Admin workflow separately from Core and
