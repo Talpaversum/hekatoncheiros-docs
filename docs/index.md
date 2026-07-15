@@ -23,6 +23,7 @@ This index separates architecture, ADR decisions, guides, and reference material
 - [OAuth flow](./licensing/oauth-flow.md)
 - [Offline flow](./licensing/offline-flow.md)
 - [Core integration](./licensing/core-integration.md)
+- [Issuer administration workflow](./licensing/issuer-admin-workflow.md)
 - [API: author registry](./licensing/api-author-registry.md)
 - [API: licensing server](./licensing/api-licensing-server.md)
 - [API: core](./licensing/api-core.md)

@@ -205,14 +205,38 @@ Privilege semantics used by the shell:
 - **Composable** (FormField, Card, Table)
 - **Page-level** (CoreTenantsPage, CoreUsersPage)
 
+The shell uses a compact enterprise layout with a top-level product menu, a
+contextual left rail, and card-based content. Pages have one clear title,
+description, and primary action. Tables provide search or filters when their
+contents can grow, place row actions on the right, use badges for state, and
+replace empty tables with an explanatory empty state. Forms are divided into
+logical sections; technical and optional fields include helper text, while
+advanced fallback inputs remain collapsed until needed.
+
+Colors communicate state or action priority rather than decoration. Success,
+warning, danger, and informational feedback use shared UI-kit components.
+Destructive actions require confirmation. Shared controls retain consistent
+heights, spacing, focus behavior, and disabled states across Core and app
+plugins.
+
+Navigation is capability-aware. Administration exposes User settings to every
+signed-in user, Tenant settings to tenant administrators, and Platform settings
+to platform administrators. The settings control is reserved for quick choices
+such as theme, language, and tenant mode. Application plugins continue to
+provide their own contextual navigation through manifest `nav_entries`.
+
 ## Routing
 
-- `/core/tenants`
-- `/core/users`
-- `/core/access`
-- `/core/apps`
-- `/core/licensing`
-- `/core/audit`
+- `/core/dashboard`
+- `/core/account`, `/core/account/session`, `/core/account/security`
+- `/core/apps`, `/core/apps/feeds`, `/core/apps/installed`,
+  `/core/apps/license-binding`
+- `/core/licensing`, `/core/licensing/entitlements`,
+  `/core/licensing/activation`, `/core/licensing/import`,
+  `/core/licensing/selections`
+- `/core/tenant/*`
+- `/core/platform/*`
+- `/app/{slug}/*` for installed application plugins
 
 ## Backend integration
 

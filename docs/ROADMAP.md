@@ -68,6 +68,21 @@ Task status is marked consistently throughout this document:
 
 ## Cross-Cutting Platform Work
 
+### Core Console UI
+
+- [x] Separate User, Tenant, and Platform settings with privilege-aware
+  Administration navigation while retaining contextual sidebars and
+  application-provided `nav_entries`.
+- [x] Add a compact operational Dashboard with live and explicitly planned
+  widgets based on currently available APIs.
+- [x] Separate tenant license activation, offline import, entitlement review,
+  and active selection from app-scoped license binding.
+- [x] Define the author-operated Issuer Admin workflow separately from Core and
+  document the authentication and administration APIs required before its UI
+  can safely issue licenses.
+- [x] Consolidate responsive enterprise UI conventions for page actions,
+  cards, tables, forms, status feedback, empty states, and navigation.
+
 ### Localization
 
 Localization is platform-wide and must remain consistent across Core, the Web
