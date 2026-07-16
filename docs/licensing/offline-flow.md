@@ -28,7 +28,11 @@ sequenceDiagram
   participant Vendor as Author/Vendor Portal
   participant Core as hekatoncheiros-core
 
-  Admin->>Vendor: Request offline license
+  Admin->>Core: Export signed activation request
+  Core-->>Admin: request_jws + Core public key
+  Admin->>Vendor: Transfer activation request
+  Vendor->>Vendor: Verify registered instance and offline-enabled grant
+  Vendor->>Vendor: Approve and issue license
   Vendor-->>Admin: Provide bundle (license_jws + author_cert_jws)
   Admin->>Core: POST /api/v1/tenants/{tenantId}/licenses/import
   Core->>Core: Verify author_cert against pinned root JWKS
@@ -42,7 +46,7 @@ sequenceDiagram
 ## Offline revocation behavior
 
 - Offline mode is not guaranteed to receive revocations.
-- Optional manual import of `/v1/revocations` snapshots may be supported.
+- Core uses the latest successfully synchronized registry and issuer snapshots.
 - Without snapshot updates, enforcement relies on token expiration (`exp`).
 
 ## Operational guidance

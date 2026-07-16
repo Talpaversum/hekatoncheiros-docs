@@ -63,9 +63,16 @@ Response (example):
 
 Returns offline bundle (`license_jws`, `author_cert_jws`, `root_kid`).
 
-### `POST /v1/licenses/revoke` (optional)
+### `GET /v1/revocations`
 
-Optional online revocation endpoint for issuer-side operations.
+Returns revoked license JTIs for Core snapshot synchronization.
+
+## Administration API
+
+The Core-hosted plugin uses delegated `/v1/admin/*` endpoints for products,
+customers, instances, grants, activations, issued licenses, bundle download,
+revocation, dashboard metrics, and audit. Each endpoint requires its matching
+`licensing.*` privilege. The API has no local login or browser session.
 
 ## Behavioral requirements
 

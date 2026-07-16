@@ -128,12 +128,15 @@ authoritative specification lives in the OpenAPI file:
 - `POST /api/v1/licensing/selection`
 - `POST /api/v1/licensing/selection/clear`
 - `POST /api/v1/licensing/offline`
+- `POST /api/v1/licensing/offline/request`
+- `POST /api/v1/licensing/revocations/sync`
+- `POST /api/v1/platform/author-registry/sync-trust`
 
-Offline token requirements:
-- JWS/JWT signature verification against configured keyring
-- `aud` must match platform instance id
-- required claims: `iss`, `aud`, `kid`, `tenant_id`, `app_id`, `tier`, `valid_from`, `valid_to`, `jti`
-- optional claim: `limits`
+Offline bundles use the same root -> author certificate -> license JWS chain as
+online activation. Core validates tenant and application namespace, portable or
+instance-bound audience, validity, and cached registry/issuer revocations.
+Offline request export returns a Core-signed activation request for manual
+transfer to an issuer.
 
 ## Links
 

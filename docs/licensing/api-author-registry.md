@@ -34,6 +34,12 @@ Notes:
 - Multiple root keys may coexist during rotation overlap.
 - Core runtime does not require live fetch if keys are pinned locally.
 
+## `GET /v1/trust-anchor`
+
+Returns `registry_id`, root JWKS, a SHA-256 root-key fingerprint, and the trust
+policy version. Core pins this material; URL and API compatibility are not trust
+signals.
+
 ## `GET /v1/revocations`
 
 Returns structured revocation snapshot.
@@ -64,6 +70,9 @@ Returns structured revocation snapshot.
 - `revoked_root_kids`: root key revocations/disallow list
 - `reason`: informational, not enforcement-critical
 
-## Internal/private operations
+## Administration
 
-Author registration and author certificate issuing endpoints are internal/private to registry operations and are not specified as public contracts here.
+`/v1/admin/*` and author lifecycle writes require a Core-signed delegated user
+token and the relevant `author_registry.*` privilege. They cover dashboards,
+authors, public keys, certificates, revocations, and audit. No private author
+key is accepted by any endpoint.

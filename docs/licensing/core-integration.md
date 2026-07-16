@@ -27,18 +27,37 @@ Accepts:
 
 - `GET /api/v1/platform/instance-id`
 
+### Offline activation request
+
+- `POST /api/v1/licensing/offline/request`
+
+Returns a short-lived Core-signed `hc-license-activation-request` and the Core
+public signing key. The issuer verifies the signature, registered instance, and
+an active offline-enabled grant before accepting the request.
+
+### Revocation synchronization
+
+- `POST /api/v1/platform/author-registry/sync-trust`
+- `POST /api/v1/licensing/revocations/sync`
+
+Core stores the last successful registry and issuer snapshots. Verification
+continues offline from these snapshots.
+
 ## Mandatory validation logic (normative)
 
 For each imported/activated license, core must execute:
 
-1. Verify author certificate against trusted root JWKS.
+1. Verify author certificate against the explicitly trusted registry root JWKS
+   and registry identifier.
 2. Extract author JWKS from verified certificate payload.
 3. Verify license JWS using extracted author key set.
 4. Validate tenant binding and app namespace:
    - tenant scope required
    - `app_id` must be `<author_id>/<slug>`
    - `iss` must match `app_id` prefix
-5. Validate audience policy:
+5. Reject revoked root keys, authors, author keys, and license JTIs using the
+   latest stored snapshots.
+6. Validate audience policy:
    - `portable`: `aud` contains `"*"` (skip instance audience check)
    - `instance_bound`: `aud` must contain local `hcpi_<platform_instance_uuid>`
 

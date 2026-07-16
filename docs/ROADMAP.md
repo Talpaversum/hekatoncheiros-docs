@@ -66,6 +66,33 @@ Task status is marked consistently throughout this document:
 - [x] Integrate `hc-author-registry` into author onboarding: issue `author_id`
   and `author_cert_jws`, manage public keys, and publish JWKS/revocation data.
 
+### Licensing and Registry Handoff
+
+- [ ] Provision non-development cryptographic material for the Author Registry
+  root, author signing keys and certificates, Core delegation keys, and issuer
+  signing keys; replace all Compose development keys before production use.
+- [ ] Deploy `hc-author-registry` with persistent storage and its root trust
+  configuration, connect Core to it, and verify trust and revocation snapshot
+  synchronization.
+- [ ] Deploy `hc-app-licensing` inside the author's HC instance, configure its
+  author certificate, Registry trust roots, Core delegation JWKS, and trusted
+  Core instance JWKS, then install its manifest and management UI plugin.
+- [ ] Exercise the complete online lifecycle end to end: author onboarding,
+  product and customer setup, Core instance registration, grant approval,
+  license issue, activation, renewal or replacement, suspension, and
+  revocation enforcement.
+- [ ] Exercise the signed offline activation-request and license-response flow,
+  including stale, revoked, malformed, and mismatched artifacts.
+- [ ] Add scheduled Registry and issuer revocation synchronization in Core;
+  retain manual refresh as an administrative recovery action.
+- [ ] Replace temporary administration-token compatibility paths with scoped,
+  rotatable service identities for Core-to-Registry, Core-to-Issuer, and
+  Registry-to-Issuer machine communication.
+- [ ] Expand issuer and Registry integration tests around database-backed
+  lifecycle transitions, authorization denials, and audit failure paths.
+- [ ] Review reported npm dependency advisories and upgrade affected packages
+  without forced or behavior-breaking updates.
+
 ## Cross-Cutting Platform Work
 
 ### Core Console UI
@@ -106,6 +133,16 @@ Task status is marked consistently throughout this document:
 - [x] Define the author-operated Issuer Admin workflow separately from Core and
   document the authentication and administration APIs required before its UI
   can safely issue licenses.
+- [x] Implement the author-operated licensing issuer with products, customers,
+  registered Core instances, commercial grants, activation approval, issued
+  licenses, renewal/replacement foundations, revocation, offline exchange,
+  attributable audit, and a localized Core-hosted management plugin.
+- [x] Complete the central Author Registry lifecycle with delegated Core RBAC,
+  author approval/suspension/revocation, public-key and certificate lifecycle,
+  cryptographic trust-anchor metadata, public revocation snapshots, audit, and
+  platform administration UI.
+- [x] Enforce cached registry and issuer revocations in Core and add signed
+  offline activation-request export.
 - [x] Consolidate responsive enterprise UI conventions for page actions,
   cards, tables, forms, status feedback, empty states, and navigation.
 
@@ -173,14 +210,6 @@ These items require design decisions rather than implementation alone.
   of database credentials, migrations, backup/restore boundaries, and lifecycle
   state when an application is not operated by the target HC instance but uses
   its tenant/app database model.
-- [ ] Reconsider the `hc-author-registry` boundary: a standalone service or an
-  optional authority mode in Core.
-- [ ] Decide the product boundary of `hc-app-licensing`: a standalone
-  author/vendor service or an installable HC application with a manifest and
-  administration UI.
-- [ ] If `hc-app-licensing` becomes an installable application, add its manifest,
-  runtime package, UI plugin, and management of customers, grants, licenses, and
-  revocations.
 
 ### Application-Owned Mobile Clients
 

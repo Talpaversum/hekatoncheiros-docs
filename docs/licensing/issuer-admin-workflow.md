@@ -1,44 +1,44 @@
 # Licensing Issuer Administration
 
-`hc-app-licensing` is an author-operated issuer. Its administration workflow is
-separate from tenant licensing in Core: Core activates, imports, validates, and
-selects licenses, while the issuer creates and revokes them.
+`hc-app-licensing` is an author-operated, optional Hekatoncheiros application.
+It issues licenses; Core only activates, imports, validates, selects, and
+enforces them.
 
-## Issue license workflow
+## Administration model
 
-The planned Issuer Admin UI uses three steps:
+The UI is loaded as a Core web-shell plugin and all requests pass through the
+Core application proxy. Core supplies a signed delegated identity. The issuer
+checks granular `licensing.*` privileges and records the user, tenant,
+permission, operation, target, request metadata, result, and correlation ID.
+The issuer has no local accounts, login page, passwords, or sessions.
 
-1. **Recipient** - select or create a customer reference, enter the target
-   tenant, choose an author-owned application, and provide the Core instance ID
-   when the license is instance-bound.
-2. **License terms** - select portable or instance-bound mode, validity dates,
-   features, entitlement values, and structured limits.
-3. **Review and issue** - review the effective claims, issue the signed license,
-   and provide both the license JWS and an offline bundle. An online activation
-   handoff may be offered when the recipient has a registered OAuth client.
+The administration surface covers:
 
-Issued material must never expose the author's private signing key. Every issue
-operation records the operator identity, recipient, effective terms, resulting
-`jti`, and timestamp in an audit trail.
+- products, editions, capabilities, and default policy;
+- customers and registered Core instances;
+- commercial grants and their validity, limits, and offline policy;
+- pending, approved, rejected, completed, and failed activations;
+- issued licenses, replacement, suspension, revocation, and bundle download;
+- certificate/signing-key state and issuer audit history.
 
-## Required backend foundation
+## Issue lifecycle
 
-The current service exposes bearer-protected `POST /v1/licenses/issue`, but it
-does not yet expose a secure issuer-operator session, product/customer
-administration, grant listing, revocation administration, or audit APIs. A
-production UI must not call the issuing endpoint with a shared token embedded
-in browser code.
+1. Create an active product and customer.
+2. Register the customer's Core instance and its public identity.
+3. Create and activate a commercial grant.
+4. Core submits an online activation, or an operator imports Core's signed
+   offline activation request.
+5. An operator with `licensing.activations.approve` approves or rejects it.
+6. An operator with `licensing.licenses.issue` issues the JWS license bundle.
+7. Core verifies the registry root, author certificate, author key, claims,
+   audience, expiry, and cached revocations before storing the license.
 
-Before the UI becomes operational, define and implement:
+Commercial grants and issued licenses remain separate records. Renewing or
+replacing a license produces new signed material and preserves history.
 
-- issuer operator authentication, authorization, session lifecycle, and CSRF
-  policy;
-- author-owned application and customer records;
-- create, list, inspect, renew, and revoke operations for license grants;
-- structured validation for features, entitlement values, and limits;
-- auditable offline bundle download and online activation handoff;
-- an explicit deployment decision: standalone author service or installable HC
-  application with a manifest and UI plugin.
+## Key custody
 
-Until those boundaries are decided, issuing remains an API-level development
-capability. Core must not present it as a tenant administration action.
+The author private signing key stays in the issuer deployment and is never
+returned through an API or uploaded to the registry. The registry stores only
+public author keys and issues the author certificate. Rotation retains old
+public verification material for licenses issued before the rotation.
