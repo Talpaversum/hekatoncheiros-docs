@@ -65,9 +65,10 @@ hostname does not confer trust.
 ## Reading order
 
 1. [Trust model](./trust-model.md)
-2. [Identity model](./identity-model.md)
-3. [Token structures](./token-structures.md)
-4. [OAuth flow](./oauth-flow.md)
-5. [Offline flow](./offline-flow.md)
-6. [Core integration](./core-integration.md)
+2. [PKI bootstrap and environment separation](./pki-bootstrap.md)
+3. [Identity model](./identity-model.md)
+4. [Token structures](./token-structures.md)
+5. [OAuth flow](./oauth-flow.md)
+6. [Offline flow](./offline-flow.md)
+7. [Core integration](./core-integration.md)
 7. API and ERD documents

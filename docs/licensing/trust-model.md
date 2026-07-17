@@ -2,6 +2,11 @@
 
 This document defines the root of trust and verification chain for licensing.
 
+Development and test roots are disposable, explicitly labeled trust anchors.
+They are never production roots and production services must reject them. See
+[Licensing PKI Bootstrap](./pki-bootstrap.md) for the implemented local workflow
+and the deferred production ceremony.
+
 ## Root of trust
 
 - Trust anchor is managed by `hc-author-registry`.

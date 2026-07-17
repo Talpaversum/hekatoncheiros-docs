@@ -68,6 +68,9 @@ Task status is marked consistently throughout this document:
 
 ### Licensing and Registry Handoff
 
+- [x] Add a safe, explicit development/test PKI bootstrap with ignored private
+  material, environment-marked trust anchors, fail-closed Registry and issuer
+  configuration validation, and full-chain rejection tests.
 - [ ] Provision non-development cryptographic material for the Author Registry
   root, author signing keys and certificates, Core delegation keys, and issuer
   signing keys; replace all Compose development keys before production use.

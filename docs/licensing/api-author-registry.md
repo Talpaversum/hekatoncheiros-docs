@@ -36,9 +36,10 @@ Notes:
 
 ## `GET /v1/trust-anchor`
 
-Returns `registry_id`, root JWKS, a SHA-256 root-key fingerprint, and the trust
-policy version. Core pins this material; URL and API compatibility are not trust
-signals.
+Returns `registry_id`, root JWKS, a SHA-256 root-key fingerprint, the trust
+policy version, `environment`, and `production_trust`. Core pins this material;
+the environment fields make non-production authorities visible but do not
+replace key pinning. URL and API compatibility are not trust signals.
 
 ## `GET /v1/revocations`
 
