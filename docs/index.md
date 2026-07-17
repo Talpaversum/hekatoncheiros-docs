@@ -52,6 +52,7 @@ This index separates architecture, ADR decisions, guides, and reference material
 - [Quick Start](./guides/app-developer/quickstart.md)
 - [Manifest](./guides/app-developer/manifest.md)
 - [UI integration](./guides/app-developer/ui-integration.md)
+- [Author workflows](./guides/app-developer/author-workflows.md)
 
 ## Reference
 
@@ -59,6 +60,7 @@ This index separates architecture, ADR decisions, guides, and reference material
 
 - [Core API](./reference/api/README.md)
 - [OpenAPI](./reference/api/openapi.yml)
+- [Author Portal API](./reference/api/author-portal.md)
 
 ### Database
 

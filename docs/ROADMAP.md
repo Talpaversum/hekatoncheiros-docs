@@ -54,6 +54,16 @@ Task status is marked consistently throughout this document:
   runtimes.
 - [x] Securely deliver and rotate app runtime tokens in Core-managed
   applications without manual copying.
+- [ ] Connect approved hosted author apps to a build worker that checks out the
+  selected Git revision, produces an immutable runtime package, and hands its
+  reviewed deployment plan to the existing Core runtime manager.
+- [ ] Materialize approved author catalog submissions into the public catalog
+  feed, including immutable manifest/package references for hosted apps and
+  verified external manifest/feed plus issuer discovery for trusted
+  self-hosted apps.
+- [ ] Provision and route Talpaversum-hosted Licensing as an isolated managed
+  issuer namespace per `author_id`; keep author-scoped authorization through
+  products, customers, grants, licenses, activations, and audit.
 
 ### Later
 
@@ -74,12 +84,17 @@ Task status is marked consistently throughout this document:
 - [ ] Provision non-development cryptographic material for the Author Registry
   root, author signing keys and certificates, Core delegation keys, and issuer
   signing keys; replace all Compose development keys before production use.
-- [ ] Deploy `hc-author-registry` with persistent storage and its root trust
-  configuration, connect Core to it, and verify trust and revocation snapshot
-  synchronization.
-- [ ] Deploy `hc-app-licensing` inside the author's HC instance, configure its
-  author certificate, Registry trust roots, Core delegation JWKS, and trusted
-  Core instance JWKS, then install its manifest and management UI plugin.
+- [x] Add independently deployable development Compose stacks for
+  `hc-author-registry` and `hc-app-licensing`, with persistent PostgreSQL,
+  explicit development trust configuration, Core network integration, and
+  health checks. Production deployment and trust material remain open.
+- [ ] Deploy production `hc-author-registry` with persistent storage and its
+  offline-provisioned root trust, connect Core to it, and verify scheduled
+  trust and revocation synchronization.
+- [ ] Deploy production `hc-app-licensing` inside the author's HC instance,
+  configure its author certificate, Registry trust roots, Core delegation
+  JWKS, and trusted Core instance JWKS, then install its manifest and
+  management UI plugin.
 - [ ] Exercise the complete online lifecycle end to end: author onboarding,
   product and customer setup, Core instance registration, grant approval,
   license issue, activation, renewal or replacement, suspension, and
@@ -107,6 +122,11 @@ Task status is marked consistently throughout this document:
   hysteretic health checks, safe registry status, proxy-level 503 blocking,
   disabled Web navigation, direct-URL availability UI, polling, and a runtime
   dashboard widget.
+- [x] Add the Author Portal with explicit hosted, trusted self-hosted, and
+  private self-hosted workflows; author requests and scoped memberships;
+  encrypted GitHub connections and private-repository manifest validation;
+  app/runtime/catalog review states; trusted-origin connectivity checks; and
+  permission-aware EN/CS UI with documented English fallback.
 
 ### AAA Accounting and Audit Log
 

@@ -16,6 +16,34 @@ It runs:
 - nginx serving the web shell and proxying `/api/v1/*` to Core
 - an optional nginx HTTPS ingress with operator-supplied certificates
 
+Author Registry and Licensing are separate products with separate databases
+and Compose projects. They are not required by private self-hosted app
+development.
+
+## Development Registry and Licensing
+
+Generate disposable development-only trust material and start both services:
+
+```bash
+cd ../hc-author-registry
+npm run pki:bootstrap:dev
+docker compose --env-file .local/dev-pki/registry.env up -d --build
+
+cd ../hc-app-licensing
+docker compose --env-file ../hc-author-registry/.local/dev-pki/issuer.env up -d --build
+
+cd ../hekatoncheiros-core
+docker compose -f docker-compose.yml -f docker-compose.dev-trust.yml up -d --build
+```
+
+The Registry uses ports `4020` and `5435`; Licensing uses `4030` and `5434`.
+Both join the Core Compose network for local back-channel traffic. The
+generated `.local/dev-pki` material is ignored by Git and is not a production
+trust anchor. Production mode never generates a Registry root automatically.
+The `docker-compose.dev-trust.yml` override contains explicitly labeled,
+disposable Core development identities and permits HTTP only for the local
+Registry network. Do not include this override in production.
+
 ## Start
 
 From `hekatoncheiros-core`:
