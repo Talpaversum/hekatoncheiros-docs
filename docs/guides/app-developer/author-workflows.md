@@ -1,19 +1,19 @@
-# Author workflows
+# Official author workflows
 
-Hekatoncheiros separates application authorship from platform administration.
-An author membership grants access only to one `author_id`; it never grants
-platform-wide privileges.
+Hekatoncheiros distinguishes between private application development and official authorship.
 
-## Operating modes
+Private application development is not an author operating mode. A private developer does not receive an `author_id`, is not registered in the official Author Registry and cannot publish applications to the official Talpaversum catalog.
 
-| Mode | Registry | Runtime and build | Licensing | Official catalog |
+## Official author operating modes
+
+There are exactly two official author operating modes.
+
+| Mode | Official Registry | Runtime and build | Licensing | Official catalog |
 | --- | --- | --- | --- | --- |
-| Talpaversum-hosted | Required | Talpaversum-operated; first start and dangerous changes require operator approval | Talpaversum-managed, isolated per author | Allowed after review |
-| Trusted self-hosted | Required | Author-operated | Author-operated issuer, chained to the Registry certificate | Allowed after external identity validation and review |
-| Private self-hosted | Not used | Local administrator-operated | Optional local/private issuer | Not allowed |
+| Talpaversum-hosted | Required | Operated by Talpaversum | Managed by Talpaversum and isolated by `author_id` | Allowed after application and catalog review |
+| Trusted self-hosted | Required | Operated by the author | Operated by the author and chained to the Talpaversum author certificate | Allowed after external issuer validation and catalog review |
 
-The official Author Registry exists only on the Talpaversum instance. A
-private installation must remain usable when that Registry is absent.
+Private self-hosted application development is documented separately in `private-app-development.md`.
 
 ## Official author onboarding
 
@@ -52,23 +52,6 @@ removes the stored credential when disconnected.
 Repository tokens provide source access only. They do not grant runtime,
 catalog, licensing, or Registry privileges.
 
-## Private self-hosted development
-
-Private development is not an official author request:
-
-1. Run Core and Web.
-2. Build and run the application backend on local infrastructure.
-3. Add its exact scheme, host, and port under **Platform configuration >
-   Trusted origins**. Review the HTTP warning and test connectivity.
-4. Expose a valid manifest or private catalog feed from that origin.
-5. Add the feed or install the application URL in **Applications**.
-6. Use no license, or configure a local/private issuer according to local
-   policy.
-
-Core shows this application as private/unverified. Trusting an origin permits
-Core to fetch application material from it; it does not establish official
-author identity.
-
 ## Permissions and lifecycle
 
 Author roles are owner, manager, developer, licensing manager, and viewer.
@@ -91,6 +74,4 @@ and must never be promoted. Production Registry root creation is a separate
 offline operational ceremony with an approved lifecycle, custody, backup,
 rotation, revocation, and recovery procedure.
 
-EN and CS portal translations are complete. Until native portal translations
-are supplied for SK, DE, FR, and ES, those locales deliberately use the
-documented per-key English fallback.
+Translation completeness is verified by the Web i18n parity test. Documentation must not claim that a locale is complete unless the current test confirms that all required keys and interpolation placeholders exist.
