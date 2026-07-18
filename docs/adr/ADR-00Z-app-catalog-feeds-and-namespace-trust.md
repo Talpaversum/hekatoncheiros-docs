@@ -175,7 +175,8 @@ operations with their existing approval and audit requirements.
 
 Core integrates with the private `hc-author-registry` for administrator-driven
 author onboarding. With `AUTHOR_REGISTRY_URL` and
-the Author Registry configured, `platform.authors.manage` can create
+the Author Registry configured, an operator with the exact
+`platform.author_registry.*` permission can create
 an author, register public-only JWKS, and issue the first root-signed
 `author_cert_jws` in one Core workflow. Key updates issue a replacement
 certificate, and Core can snapshot the registry's public root JWKS and

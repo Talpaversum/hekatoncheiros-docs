@@ -52,7 +52,12 @@ This index separates architecture, ADR decisions, guides, and reference material
 - [Quick Start](./guides/app-developer/quickstart.md)
 - [Manifest](./guides/app-developer/manifest.md)
 - [UI integration](./guides/app-developer/ui-integration.md)
+- [Private application development](./guides/app-developer/private-app-development.md)
 - [Author workflows](./guides/app-developer/author-workflows.md)
+
+## Testing
+
+- [Author workflow acceptance matrix](./testing/acceptance-matrix.md)
 
 ## Reference
 

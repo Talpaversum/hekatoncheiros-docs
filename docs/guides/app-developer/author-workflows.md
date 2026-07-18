@@ -20,8 +20,9 @@ Private self-hosted application development is documented separately in `private
 1. Open **Author Portal > Become an Author** and save a draft.
 2. Select hosted or trusted self-hosted mode, complete the request, accept the
    terms, and submit it.
-3. A platform operator starts review and approves, rejects, or requests
-   changes. Review, suspension, and revocation actions are audited.
+3. A platform author reviewer starts review and approves, rejects, or requests
+   changes. Author request review is audited independently of Registry,
+   catalog, external issuer, application, and runtime decisions.
 4. Approval creates an `author_id`, owner membership, scoped permissions, and
    an Author Registry identity and certificate.
 
@@ -56,14 +57,22 @@ catalog, licensing, or Registry privileges.
 
 Author roles are owner, manager, developer, licensing manager, and viewer.
 Their `author.*` permissions are checked against the selected `author_id`.
-Platform operators retain separate `platform.authors.manage`,
-`platform.catalog.manage`, `platform.apps.runtime.manage`, and
-`platform.author_registry.manage` privileges.
+Platform operators use separate privileges:
 
-Suspending or revoking an official author updates Core and the Registry.
-Consumers must refresh Registry revocations. Catalog and runtime disablement
-remain explicit operator actions so existing installations can be handled
-without silently deleting customer data.
+- author requests: `platform.authors.review`,
+- Registry read, key, certificate, revocation, and audit operations:
+  the matching `platform.author_registry.*` privilege,
+- catalog review: `platform.catalog.manage`,
+- hosted runtime review: `platform.apps.runtime.manage`.
+
+Each privilege is also gated by the corresponding instance capability. A
+successful author request creates the identity and membership only. It does
+not approve an application, external issuer, catalog submission, or runtime.
+
+Registry key rotation and revocation are separate Registry operations.
+Consumers must refresh Registry revocations. Catalog publication and runtime
+disablement remain explicit operator actions so existing installations can be
+handled without silently deleting customer data.
 
 ## Development trust
 
