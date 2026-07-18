@@ -1,8 +1,8 @@
 # Official author workflows
 
-Hekatoncheiros distinguishes between private application development and official authorship.
+Hekatoncheiros supports two official author operating modes: Talpaversum-hosted and trusted self-hosted. Private application development is a separate local workflow and does not create an official author identity or `author_id`.
 
-Private application development is not an author operating mode. A private developer does not receive an `author_id`, is not registered in the official Author Registry and cannot publish applications to the official Talpaversum catalog.
+A private developer is not registered in the official Author Registry and cannot publish applications to the official Talpaversum catalog.
 
 ## Official author operating modes
 

@@ -1,6 +1,6 @@
 # Private application development
 
-Developer Tools is a project lifecycle workspace. It is not an alternative label for Apps Management and it is not limited to one-time application installation.
+Developer Tools is a project lifecycle workspace. It manages source connections, application discovery, validation, deployment, updates, runtime operations and logs. It is not an alternative label for Apps Management and it is not limited to one-time application installation.
 
 Private application development is a local platform workflow. It does not use the official Talpaversum Author Registry.
 
@@ -54,7 +54,9 @@ Supported project source types are GitHub, GitLab, a generic Git repository, a
 server-side local workspace, a direct manifest URL, and a private feed.
 Credentials belong to tenant-scoped connection records, are encrypted at rest,
 are never returned to Web, and are erased when a connection is revoked. A
-project stores only the connection reference.
+personal connection is visible only to its owner. A tenant-shared connection
+requires the shared-connection privilege and is visible only inside its tenant.
+A project stores only the connection reference.
 
 GitHub App installation is the preferred GitHub connection. Token-based GitHub
 and GitLab connections, HTTPS credentials, SSH deploy keys, and private-feed
@@ -62,7 +64,9 @@ credentials remain explicit connection types with minimal scopes.
 
 ## Local workspace
 
-A local workspace is a directory available to the Core server and located under an explicitly configured workspace root. A browser cannot provide a persistent server-side deployment connection to an arbitrary directory on the user's computer.
+A local workspace is a directory available to the Core server and located under an explicitly configured workspace root. It is not an arbitrary directory selected from the user's browser.
+
+A browser cannot provide a persistent server-side deployment connection to an arbitrary directory on the user's computer.
 
 Core canonicalizes the path and rejects traversal or a path outside
 `DEVELOPER_WORKSPACE_ROOTS`. In Docker, the workspace root must be mounted into
