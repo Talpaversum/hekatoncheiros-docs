@@ -14,6 +14,8 @@ Capability-dependent backend operations return a stable error code in the respon
 - **Author Workspace** is available to members of approved author profiles. It contains author applications, Git connections, team membership, licensing, submissions, and author activity. A user with several memberships selects an active author; the selection is persisted in the browser and validated again by Core for every scoped request.
 - **Registry Administration** is a separate operator interface. It requires both the official registry capability and platform RBAC. Author approval, catalog approval, and runtime approval remain separate workflows and audit events.
 
+Private self-hosted development is not an official author mode and is never offered by the “Become an Author” form. That form is only for Talpaversum-hosted and trusted self-hosted author identities.
+
 Opening a disabled module by a direct URL shows an unavailable-service explanation; hiding navigation is not the security boundary.
 
 ## Author-scoped RBAC
@@ -33,3 +35,5 @@ Suspending or revoking an author blocks new trusted publication; it does not imp
 ## Migration
 
 No registry URL or official capability is introduced automatically by migration. Therefore upgrading an existing private installation does not add an Author Registry dependency or expose registry administration. Official Talpaversum deployments must explicitly enable and configure the capabilities they operate.
+
+The production Author Registry deployment requires an external `DATABASE_URL`, Core delegated authentication, and root public/private JWKS mounted as protected files. It never provisions PostgreSQL or generates root keys. The separate development Compose file is explicitly non-production. Registry migrations are discovered by filename and recorded transactionally in `registry_schema_migrations`.
