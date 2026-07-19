@@ -1,33 +1,7 @@
-# Author Registry operations
+# Using Registry Administration
 
-The official Author Registry runs only as part of the Talpaversum-operated platform.
+Registry Administration is available only on an official Talpaversum-operated instance when the Registry capability and endpoint are configured and the user has the required platform privilege.
 
-## Production database
+Use it to review the trust anchor, author public keys and certificates, revocations, synchronization state and Registry audit records. Author request review, catalog review and runtime review are separate administration surfaces.
 
-Production deployment requires an externally supplied `DATABASE_URL`.
-
-The production Registry compose file must not create or start PostgreSQL.
-
-## Development database
-
-`docker-compose.dev.yml` may contain a disposable local PostgreSQL service.
-
-This compose file is optional and development-only. It must never be started automatically by production startup, tests or migrations.
-
-## Authentication
-
-Human management operations use short-lived Core user delegation tokens and explicit Registry permissions.
-
-`ADMIN_TOKEN` is not part of the production authentication model.
-
-## Root keys
-
-The production Registry root key is provisioned outside normal application startup.
-
-Production startup must never generate a root key.
-
-## Migrations
-
-The production container applies numbered migrations before starting the Registry server.
-
-Migration tests must validate the resulting database schema against an explicitly supplied test database. Tests must not create a database container automatically.
+For deployment, database, migration, authentication and root-material requirements, see [Author Registry operations](../../operations/author-registry.md). For trust ownership and service boundaries, see [Author Registry architecture](../../architecture/author-registry.md).

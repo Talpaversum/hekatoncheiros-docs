@@ -134,7 +134,7 @@ docker compose down -v
 
 ## Current limitations
 
-- app backend containers are not generated yet
 - external DB mode is not wired as an installer flow yet
 - certificate acquisition and renewal remain operator responsibilities
 - images are built locally, not published
+- the verified Compose path is a development/local self-hosting deployment, not a packaged production installer

@@ -4,6 +4,8 @@ This matrix is the release gate for private development, official author
 workflows, author isolation, licensing isolation, and Registry deployment.
 All commands run from the named repository.
 
+Passing these implementation gates does not make the hosted build, official catalog, managed issuer or Registry production-ready. Production readiness additionally requires the deployment and operational validation listed in [platform status](../../STATUS.md).
+
 ## Automated suites
 
 | Area | Automated coverage | Command |

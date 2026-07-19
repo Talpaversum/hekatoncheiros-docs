@@ -15,6 +15,8 @@ There are exactly two official author operating modes.
 
 Private self-hosted application development is documented separately in `private-app-development.md`.
 
+The Talpaversum-hosted row describes the approved operating model and target service boundary. The hosted build worker, official catalog materialization and production managed multi-author issuer are not yet production-ready; see [platform status](../../../STATUS.md).
+
 ## Official author onboarding
 
 1. Open **Author Portal > Become an Author** and save a draft.
@@ -32,13 +34,13 @@ private key. Private keys must never be pasted into Core or committed.
 
 ## Git and application workflow
 
-GitHub is the first provider implementation. Use a fine-grained token with
-read-only contents access to the smallest possible repository set. Core
-validates the token against GitHub, encrypts it with
-`AUTHOR_GIT_TOKEN_ENCRYPTION_KEY`, never returns it through the API, and
-removes the stored credential when disconnected.
+Core implements GitHub, GitLab and generic Git source adapters. GitHub supports
+a configured GitHub App or a scoped token; GitLab uses a scoped token and
+configured service URL. Generic Git uses an explicit HTTPS or SSH repository
+reference. Core encrypts stored credentials, never returns them through the API
+and removes stored secret material when a connection is disconnected.
 
-1. Connect GitHub to an approved author profile.
+1. Connect a supported Git provider to an approved author profile.
 2. Select an accessible public or private repository, branch, and manifest
    path.
 3. Validate the manifest. The `app_id` namespace must match the approved

@@ -1,5 +1,9 @@
 # Core installer configuration
 
+Status: Proposed installer design. No packaged web installer currently implements this workflow.
+
+The current development deployment uses logical tenant isolation in one PostgreSQL database. The tenancy choices below are target installer options, not a statement that DB-per-tenant provisioning is currently enabled.
+
 ## Goals
 
 - One-time web UI

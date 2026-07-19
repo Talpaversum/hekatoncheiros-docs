@@ -2,14 +2,13 @@
 
 ## 1. Tenancy model
 
-- Default: DB-per-tenant.
-- Each tenant database contains:
-  - the `core` schema
-  - one `app_<app_id>` schema for each installed application
+- Current implementation: tenant-aware logical isolation in one physical PostgreSQL database.
+- The database contains the `core` schema and an isolated application schema for each installed application.
+- Physical DB-per-tenant provisioning remains a supported design direction, not the current development deployment default.
 
 ## 2. Provisioning
 
-- Core creates tenant databases; applications do not.
+- Where physical tenant databases are configured, Core creates them; applications do not.
 - Applications MUST NOT execute `CREATE DATABASE`.
 - Core may use elevated database privileges for provisioning as an operational
   compromise that simplifies installation.
@@ -59,6 +58,8 @@ Application behavior:
 - Core2Core integration
 - no shared database
 - tracked as a roadmap item
+
+Standalone and externally operated database responsibilities remain an [open architecture decision](./application-database-ownership.md).
 
 ## MVP Note
 

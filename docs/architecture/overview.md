@@ -1,6 +1,6 @@
 # Architecture Overview
 
-Status: draft, early development.
+Status: Draft overview of the implemented development platform and target architecture.
 
 Hekatoncheiros Core is a platform kernel, not a business application.
 
@@ -28,7 +28,7 @@ The current implementation is intentionally small:
 - PostgreSQL
 - row-level/logical tenancy as the practical MVP mode
 - React web shell in a separate repository
-- app installation and UI plugin storage still evolving
+- app installation lifecycle and Core-owned UI plugin storage
 
 DB-per-tenant and stronger installer automation are target architecture, not
 fully implemented runtime behavior yet.
@@ -87,8 +87,8 @@ catalog creates or stages local runtime state:
   app base URL.
 - `stage_only`: Core records the selected plan without enabling runtime use.
 - `compose`: Core validates an app-owned package and starts its Compose runtime
-  after hash-bound, audited admin approval; `stop` and `update` lifecycle
-  controls remain open.
+  after hash-bound, audited admin approval; managed runtimes support health,
+  stop, update, token rotation and runtime-aware uninstall.
 
 Licensing does not block installation. It blocks tenant runtime access when the
 manifest declares `licensing.required=true` and no selected active license
@@ -103,10 +103,10 @@ continues exposing it through a Core-owned `ui_url`.
 Installed apps can also report a non-mutating `update_signal` through an app
 runtime JWT. The signal tells Core and admins that a newer manifest or UI
 artifact may be available. Core does not automatically replace runtime
-artifacts from that signal; an admin reviews it and chooses whether to refresh
-the artifact or clear the signal. Until Core-managed runtime token delivery is
-implemented, admins can issue a short-lived app token from Apps / Installed
-apps for development and manual operational flows.
+  artifacts from that signal without the configured trust and policy checks; an
+  admin can review it, refresh the artifact or clear the signal. Core-managed
+  runtimes receive rotatable runtime tokens through the managed delivery path;
+  administrators can also issue short-lived app tokens for supported manual flows.
 
 Apps may contribute procedural Help entries through
 `integration.ui.help_entries`. Help entries are not feature links first; they
@@ -128,11 +128,9 @@ License expiry must be non-destructive.
 
 ## Open Questions
 
-- final app migration authority for all installation modes
-- standalone app database ownership
-- `stop` and `update` lifecycle policy for Core-managed app runtimes
-- production installer flow
-- production packaging for Docker and Kubernetes
+- [standalone application database ownership](./application-database-ownership.md)
+- [production signing-key management](./signing-key-management.md)
+- production installer and deployment packaging
 - custom app hostnames and tenant resolution
 
 Keep detailed decisions in ADRs and focused reference docs rather than growing
