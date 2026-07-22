@@ -14,7 +14,7 @@ run, or the normal developer workflow.
 
 ## Trust environments
 
-Registry and issuer configuration uses explicit identity modes:
+Registry and issuer configuration supports explicit identity modes:
 
 | Mode | Purpose | Accepted key identifiers |
 | --- | --- | --- |
@@ -27,31 +27,29 @@ The Registry publishes its mode as `environment` and the boolean
 trust still comes only from an explicitly pinned public root key and Registry
 identity.
 
-## Local development bootstrap
+## Local Registry bootstrap
 
 Run this command explicitly from `hc-author-registry`:
 
 ```bash
-npm run pki:bootstrap:dev -- --author-id=talpaversum
+npm run pki:bootstrap:local
 ```
 
-It creates `.local/dev-pki/` containing:
-
-- a disposable development Registry root key pair;
-- an author signing key pair;
-- a root-signed, 30-day development author certificate;
-- public JWKS files;
-- `registry.env` and `issuer.env` configuration snippets;
-- a warning describing the material as development-only.
-
-The directory is excluded from Git. Private JWK files and environment snippets
-use mode `0600`; public material uses `0644`. The bootstrap refuses to overwrite
-an existing output directory. Delete or archive the entire directory and choose
-a new output path when a fresh disposable chain is needed.
+It creates an ignored `.env` and Registry root pair under `.local/pki`. The
+private file and `.env` use mode `0600`; the public JWKS uses `0644`. Existing
+keys and operator configuration are preserved. Explicit `--force` rotation
+changes the trust anchor and invalidates material issued under the previous
+local root.
 
 The generated public Registry JWKS can be supplied to a local Core through
-`LICENSING_ROOT_JWKS_JSON`. This only establishes trust in that disposable local
-chain. It does not establish production trust.
+`LICENSING_ROOT_JWKS_JSON`. Registry runs with `REGISTRY_ROOT_MODE=production`
+to exercise production file loading and validation, but the generated
+`local-registry-root-*` key establishes only disposable local trust. It is not
+an approved production root.
+
+The bootstrap is Registry-only. Author signing keys, author certificates, and
+Licensing issuer configuration are provisioned through the separate author
+identity workflow; they are not emitted into shared environment snippets.
 
 ## Runtime validation
 

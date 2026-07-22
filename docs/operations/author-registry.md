@@ -1,8 +1,24 @@
 # Author Registry operations
 
-Status: Development operation is implemented; production deployment is pending.
+Status: Local production-style operation is implemented; production deployment is pending.
 
-The production Author Registry uses an externally supplied `DATABASE_URL`. PostgreSQL is not provisioned by the production Registry Compose definition. A bundled PostgreSQL service is permitted only in an explicitly selected development Compose configuration.
+The Registry has a single production-oriented `docker-compose.yml`. It uses an external PostgreSQL database, Docker secret files, the external Core network, and production root validation. It does not bundle PostgreSQL.
+
+## Local production-style startup
+
+Start Core first, then initialize and start Registry:
+
+```bash
+cd hc-author-registry
+npm ci
+npm run pki:bootstrap:local
+docker compose up -d --build
+curl --fail http://localhost:4020/health/ready
+```
+
+The bootstrap verifies the Core network, writes ignored local root files and a mode-`0600` `.env`, and validates `docker compose config`. If `DATABASE_URL` is absent, it provisions a dedicated Registry database and role in the running Core PostgreSQL container. If it is already configured, its value is preserved.
+
+Normal reruns preserve the root identity. `npm run pki:bootstrap:local -- --force` deliberately rotates it and therefore invalidates locally pinned trust and certificates. The generated `local-registry-root-*` material is strictly local and must not be committed or promoted. `REGISTRY_ROOT_MODE=production` means that the local stack exercises production loading and validation; it does not make the generated key an approved production trust anchor.
 
 ## Startup order
 

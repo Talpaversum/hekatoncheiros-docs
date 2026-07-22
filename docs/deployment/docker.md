@@ -20,29 +20,24 @@ Author Registry and Licensing are separate products with separate databases
 and Compose projects. They are not required by private self-hosted app
 development.
 
-## Development Registry and Licensing
+## Local Author Registry
 
-Generate disposable development-only trust material and start both services:
+Start Core first, then initialize Registry and use its production Compose file:
 
 ```bash
 cd ../hc-author-registry
-npm run pki:bootstrap:dev
-docker compose --env-file .local/dev-pki/registry.env up -d --build
-
-cd ../hc-app-licensing
-docker compose --env-file ../hc-author-registry/.local/dev-pki/issuer.env up -d --build
-
-cd ../hekatoncheiros-core
-docker compose -f docker-compose.yml -f docker-compose.dev-trust.yml up -d --build
+npm ci
+npm run pki:bootstrap:local
+docker compose up -d --build
 ```
 
-The Registry uses ports `4020` and `5435`; Licensing uses `4030` and `5434`.
-Both join the Core Compose network for local back-channel traffic. The
-generated `.local/dev-pki` material is ignored by Git and is not a production
-trust anchor. Production mode never generates a Registry root automatically.
-The `docker-compose.dev-trust.yml` override contains explicitly labeled,
-disposable Core development identities and permits HTTP only for the local
-Registry network. Do not include this override in production.
+Registry uses port `4020`, joins the Core Compose network, and uses a dedicated
+database reached through that network. Existing external `DATABASE_URL` values
+are preserved. Generated `.local/pki` material and `.env` are ignored by Git.
+The stack runs with production configuration validation, but its
+`local-registry-root-*` identity is disposable local trust and must never be
+promoted. Licensing issuer identity is provisioned separately through the
+author workflow.
 
 ## Start
 

@@ -78,11 +78,12 @@ handled without silently deleting customer data.
 
 ## Development trust
 
-`hc-author-registry/scripts/bootstrap-dev-pki.mjs` creates a disposable local
-root, author key, certificate, and environment snippets under ignored
-`.local/dev-pki`. This root is marked `development`, is not production trust,
-and must never be promoted. Production Registry root creation is a separate
-offline operational ceremony with an approved lifecycle, custody, backup,
-rotation, revocation, and recovery procedure.
+`npm run pki:bootstrap:local` in `hc-author-registry` creates a disposable local
+Registry root under ignored `.local/pki` and configures the production-oriented
+Compose path. It does not generate an author key or certificate; those belong
+to this author identity workflow. The local root must never be promoted.
+Production Registry root creation is a separate offline operational ceremony
+with an approved lifecycle, custody, backup, rotation, revocation, and recovery
+procedure.
 
 Translation completeness is verified by the Web i18n parity test. Documentation must not claim that a locale is complete unless the current test confirms that all required keys and interpolation placeholders exist.
