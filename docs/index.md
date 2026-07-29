@@ -80,6 +80,7 @@ This index separates current status, future work, architecture, operations, guid
 - [Manifest](./guides/app-developer/manifest.md)
 - [UI integration](./guides/app-developer/ui-integration.md)
 - [Private application development](./guides/app-developer/private-app-development.md)
+- [Author identity and license operations](./licensing/author-identity-and-license-operations.md)
 - [Author workflows](./guides/app-developer/author-workflows.md)
 
 ## Testing
